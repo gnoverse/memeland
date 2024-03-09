@@ -34,7 +34,7 @@ const theme = extendTheme({
         background:
           'linear-gradient(-45deg, #F3E8AC, #F399AF,#9EE6B4, #F6BF94, #C2B4FF)',
         backgroundSize: '400% 400%',
-        animation: 'gradient 60s ease infinite',
+        animation: 'gradient 45s ease infinite',
         fontWeight: 700
       }
     })
