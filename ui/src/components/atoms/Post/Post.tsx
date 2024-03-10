@@ -22,12 +22,14 @@ const Post: FC<IPostProps> = (props) => {
     setTimeout(() => {
       setUpvoteDisabled(false);
 
+      // TODO add Adena code
+
       toast({
         position: 'bottom-right',
         render: () => {
           return (
             <Toast
-              text={'This is a super long toast message'}
+              text={'Successfully upvoted meme!'}
               type={EToastType.SUCCESS}
             />
           );
