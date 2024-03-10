@@ -1,5 +1,5 @@
 import { IHeaderProps } from './header.types.ts';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import {
   Box,
   Button,
@@ -12,9 +12,13 @@ import {
 import { IoChevronDownOutline } from 'react-icons/io5';
 import { EPostSort, EPostTime } from '../../organisms/Home/home.types.ts';
 import Connect from '../../atoms/Connect/Connect.tsx';
+import AccountContext from '../../../context/AccountContext.ts';
+import Upload from '../../atoms/Upload/Upload.tsx';
 
 const Header: FC<IHeaderProps> = (props) => {
   const { setPostSort, setPostTime } = props;
+
+  const { address } = useContext(AccountContext);
 
   return (
     <Box
@@ -148,9 +152,13 @@ const Header: FC<IHeaderProps> = (props) => {
       <Box>
         <Text fontSize={'xl'}>meme.land</Text>
       </Box>
-      <Box display={'flex'}>
-        <Connect />
-      </Box>
+      {address ? (
+        <Upload />
+      ) : (
+        <Box display={'flex'}>
+          <Connect />
+        </Box>
+      )}
     </Box>
   );
 };
