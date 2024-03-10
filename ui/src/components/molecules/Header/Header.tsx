@@ -10,8 +10,11 @@ import {
   Text
 } from '@chakra-ui/react';
 import { IoChevronDownOutline } from 'react-icons/io5';
+import { EPostSort, EPostTime } from '../../organisms/Home/home.types.ts';
 
-const Header: FC<IHeaderProps> = () => {
+const Header: FC<IHeaderProps> = (props) => {
+  const { setPostSort, setPostTime } = props;
+
   return (
     <Box
       display={'flex'}
@@ -46,6 +49,9 @@ const Header: FC<IHeaderProps> = () => {
                 _hover={{
                   backgroundColor: 'gno.gray'
                 }}
+                onClick={() => {
+                  setPostSort(EPostSort.UPVOTES);
+                }}
               >
                 UPVOTES
               </MenuItem>
@@ -55,6 +61,9 @@ const Header: FC<IHeaderProps> = () => {
                 }}
                 _hover={{
                   backgroundColor: 'gno.gray'
+                }}
+                onClick={() => {
+                  setPostSort(EPostSort.DATE_CREATED);
                 }}
               >
                 DATE POSTED
@@ -86,6 +95,9 @@ const Header: FC<IHeaderProps> = () => {
                 _hover={{
                   backgroundColor: 'gno.gray'
                 }}
+                onClick={() => {
+                  setPostTime(EPostTime.ALL_TIME);
+                }}
               >
                 ALL TIME
               </MenuItem>
@@ -95,6 +107,9 @@ const Header: FC<IHeaderProps> = () => {
                 }}
                 _hover={{
                   backgroundColor: 'gno.gray'
+                }}
+                onClick={() => {
+                  setPostTime(EPostTime.TWO_WEEKS);
                 }}
               >
                 2 WEEKS
@@ -106,6 +121,9 @@ const Header: FC<IHeaderProps> = () => {
                 _hover={{
                   backgroundColor: 'gno.gray'
                 }}
+                onClick={() => {
+                  setPostTime(EPostTime.THREE_MONTHS);
+                }}
               >
                 3 MONTHS
               </MenuItem>
@@ -115,6 +133,9 @@ const Header: FC<IHeaderProps> = () => {
                 }}
                 _hover={{
                   backgroundColor: 'gno.gray'
+                }}
+                onClick={() => {
+                  setPostTime(EPostTime.ONE_YEAR);
                 }}
               >
                 1 YEAR

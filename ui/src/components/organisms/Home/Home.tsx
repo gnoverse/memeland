@@ -1,4 +1,9 @@
-import { generatePosts, IHomeProps } from './home.types.ts';
+import {
+  EPostSort,
+  EPostTime,
+  generatePosts,
+  IHomeProps
+} from './home.types.ts';
 import { FC, useEffect, useState } from 'react';
 import {
   Box,
@@ -16,6 +21,9 @@ import { EToastType } from '../../atoms/Toast/toast.types.ts';
 
 const Home: FC<IHomeProps> = () => {
   const [isMdOrSmaller] = useMediaQuery('(max-width: 62em)');
+
+  const [sort, setSort] = useState<EPostSort>(EPostSort.UPVOTES);
+  const [time, setTime] = useState<EPostTime>(EPostTime.ALL_TIME);
 
   const toast = useToast();
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(true);
@@ -61,6 +69,10 @@ const Home: FC<IHomeProps> = () => {
     loadPosts();
   }, []);
 
+  useEffect(() => {
+    console.log('sort / time changed');
+  }, [sort, time]);
+
   return (
     <Box
       display={'flex'}
@@ -69,7 +81,7 @@ const Home: FC<IHomeProps> = () => {
       minHeight={'100vh'}
     >
       <Box mx={10} mt={5}>
-        <Header />
+        <Header setPostSort={setSort} setPostTime={setTime} />
       </Box>
       <Container
         display={'flex'}
