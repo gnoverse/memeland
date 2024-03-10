@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { IoChevronDownOutline } from 'react-icons/io5';
 import { EPostSort, EPostTime } from '../../organisms/Home/home.types.ts';
+import Connect from '../../atoms/Connect/Connect.tsx';
 
 const Header: FC<IHeaderProps> = (props) => {
   const { setPostSort, setPostTime } = props;
@@ -148,9 +149,7 @@ const Header: FC<IHeaderProps> = (props) => {
         <Text fontSize={'xl'}>meme.land</Text>
       </Box>
       <Box display={'flex'}>
-        <Button variant={'buttonPrimary'} marginLeft={'auto'}>
-          CONNECT WALLET
-        </Button>
+        <Connect />
       </Box>
     </Box>
   );
