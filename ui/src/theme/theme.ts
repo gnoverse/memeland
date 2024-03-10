@@ -12,11 +12,18 @@ const buttonPrimary = defineStyle({
   _hover: {
     background: 'white',
     boxShadow: '2px 2px 0 0 rgba(0, 0, 0, 1)'
+  },
+  _disabled: {
+    _hover: {
+      boxShadow: 'none'
+    }
   }
 });
 
 const buttonTheme = defineStyleConfig({
-  variants: { buttonPrimary }
+  variants: {
+    buttonPrimary
+  }
 });
 
 const theme = extendTheme({

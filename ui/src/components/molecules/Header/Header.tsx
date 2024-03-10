@@ -21,7 +21,7 @@ const Header: FC<IHeaderProps> = () => {
       justifyContent={'space-between'}
       alignItems={'center'}
     >
-      <Box display={'flex'} alignItems={'center'} flex={1}>
+      <Box display={'flex'} alignItems={'center'}>
         <Box>
           <Menu isLazy>
             <MenuButton
@@ -126,7 +126,7 @@ const Header: FC<IHeaderProps> = () => {
       <Box>
         <Text fontSize={'xl'}>meme.land</Text>
       </Box>
-      <Box display={'flex'} flex={1}>
+      <Box display={'flex'}>
         <Button variant={'buttonPrimary'} marginLeft={'auto'}>
           CONNECT WALLET
         </Button>

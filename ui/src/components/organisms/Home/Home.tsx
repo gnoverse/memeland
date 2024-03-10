@@ -1,31 +1,13 @@
 import { IHomeProps } from './home.types.ts';
 import { FC } from 'react';
-import {
-  Box,
-  Button,
-  Container,
-  Image,
-  Text,
-  useMediaQuery
-} from '@chakra-ui/react';
-import { TbArrowBigUpFilled } from 'react-icons/tb';
+import { Box, Button, Container, useMediaQuery } from '@chakra-ui/react';
 import Header from '../../molecules/Header/Header.tsx';
 import Footer from '../../molecules/Footer/Footer.tsx';
+import { IPost } from '../../atoms/Post/post.types.ts';
+import Post from '../../atoms/Post/Post.tsx';
 
 const Home: FC<IHomeProps> = () => {
-  interface IPost {
-    id: string;
-    image: string;
-    author: string;
-    date: Date;
-    upvotes: number;
-  }
-
   const [isMdOrSmaller] = useMediaQuery('(max-width: 62em)');
-
-  const constructImageSrc = (data: string): string => {
-    return `data:image/png;base64,${data}`;
-  };
 
   const posts: IPost[] = [
     {
@@ -80,46 +62,8 @@ const Home: FC<IHomeProps> = () => {
         >
           {posts.map((post: IPost, index: number) => {
             return (
-              <Box
-                key={index}
-                className={'box'}
-                backgroundColor={'white'}
-                display={'flex'}
-                flexDirection={'column'}
-                alignItems={'center'}
-                width={'600px'}
-                mt={20}
-              >
-                <Image
-                  objectFit="cover"
-                  src={constructImageSrc(post.image)}
-                  alt="Meme"
-                  loading={'lazy'}
-                  boxSize={'500px'}
-                />
-                <Box
-                  display={'flex'}
-                  justifyContent={'space-between'}
-                  alignItems={'center'}
-                  mt={4}
-                  width={'500px'}
-                >
-                  <Button
-                    variant={'buttonPrimary'}
-                    leftIcon={<TbArrowBigUpFilled />}
-                  >
-                    {`UPVOTE (${post.upvotes})`}
-                  </Button>
-                  <Box
-                    ml={4}
-                    display={'flex'}
-                    flexDirection={'column'}
-                    textAlign={'right'}
-                  >
-                    <Text>{post.author}</Text>
-                    <Text>{post.date.toDateString()}</Text>
-                  </Box>
-                </Box>
+              <Box key={index} mt={20}>
+                <Post post={post} />
               </Box>
             );
           })}
