@@ -2,8 +2,10 @@ import {
   EAdenaResponseStatus,
   EAdenaResponseType,
   IAccountInfo,
-  IAdenaResponse
+  IAdenaResponse,
+  TMessage
 } from './adena.types.ts';
+import { BroadcastTxCommitResult } from '@gnolang/tm2-js-client';
 
 export class AdenaService {
   static validateAdena() {
@@ -77,5 +79,30 @@ export class AdenaService {
     }
 
     throw new Error('unable to switch Adena network');
+  }
+
+  static async sendTransaction(
+    messages: TMessage[],
+    gasWanted: number
+  ): Promise<BroadcastTxCommitResult> {
+    AdenaService.validateAdena();
+
+    // @ts-expect-error This should be injected by the extension
+    const adena = window.adena;
+
+    // Sign and send the transaction
+    const response: IAdenaResponse = await adena.DoContract({
+      messages: messages,
+      gasFee: 1000000, // 1 gnot
+      gasWanted: gasWanted // ugnot
+    });
+
+    // Check the response
+    if (response.status !== EAdenaResponseStatus.SUCCESS) {
+      throw new Error(`unable to send transaction: ${response.message}`);
+    }
+
+    // Parse the response output
+    return response.data as BroadcastTxCommitResult;
   }
 }

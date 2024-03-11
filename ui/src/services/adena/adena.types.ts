@@ -1,3 +1,6 @@
+import { MsgAddPackage, MsgCall, MsgSend } from '@gnolang/gno-js-client';
+import { MsgRun } from '@gnolang/gno-js-client/bin/proto/gno/vm';
+
 export enum EAdenaResponseStatus {
   SUCCESS = 'success',
   FAILURE = 'failure'
@@ -38,4 +41,13 @@ export interface IAccountInfo {
 
 export interface INetworkSwitchInfo {
   chainId: string;
+}
+
+export type TMessage = MsgAddPackage | MsgCall | MsgSend | MsgRun;
+
+export interface IAdenaTransaction {
+  messages: TMessage[];
+  gasFee: number;
+  gasWanted: number;
+  memo?: string;
 }
