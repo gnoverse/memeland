@@ -29,23 +29,62 @@ const Home: FC<IHomeProps> = () => {
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(true);
   const postsPerFetch: number = 3;
   const [displayedPosts, setDisplayedPosts] = useState<IPost[]>([]);
+  const [page, setPage] = useState<number>(1);
+
+  // const { provider } = useContext(ProviderContext);
+  //
+  // const constructStartTimestamp = (): number => {
+  //   const date: Date = new Date();
+  //
+  //   switch (time) {
+  //     case EPostTime.ALL_TIME:
+  //       date.setDate(0); // zero time
+  //
+  //       break;
+  //     case EPostTime.TWO_WEEKS:
+  //       date.setDate(date.getDate() - 14);
+  //
+  //       break;
+  //     case EPostTime.THREE_MONTHS:
+  //       date.setDate(date.getMonth() - 3);
+  //
+  //       break;
+  //     case EPostTime.ONE_YEAR:
+  //       date.setDate(date.getFullYear() - 1);
+  //
+  //       break;
+  //   }
+  //
+  //   return Math.floor(date.getTime() / 1000);
+  // };
 
   const fetchPosts = async (): Promise<IPost[]> => {
-    // TODO add sort + time support
-    return new Promise((resolve, _) => {
-      setTimeout(() => {
-        resolve(generatePosts(postsPerFetch));
-      }, 1000);
-    });
+    return generatePosts(postsPerFetch);
+    // if (!provider) {
+    //   throw new Error('invalid chain RPC URL');
+    // }
+    //
+    // const startTimestamp: number = constructStartTimestamp();
+    // const endTimestamp: number = Math.floor(new Date().getTime() / 1000);
+    //
+    // const response: string = await provider.evaluateExpression(
+    //   Config.REALM_PATH,
+    //   `GetPostsByTimestamp(${startTimestamp},${endTimestamp},${page},${postsPerFetch})`
+    // );
+    //
+    // console.log(response); // TODO parse response
+    //
+    // return generatePosts(postsPerFetch);
   };
 
-  const loadPosts = async () => {
+  const loadMorePosts = async () => {
     setIsLoadingMore(true);
 
     try {
       const posts: IPost[] = await fetchPosts();
 
       setDisplayedPosts(displayedPosts.concat(posts));
+      setPage(page + 1);
     } catch (e) {
       console.error(e);
 
@@ -53,10 +92,7 @@ const Home: FC<IHomeProps> = () => {
         position: 'bottom-right',
         render: () => {
           return (
-            <Toast
-              text={'Unable to fetch more memes'}
-              type={EToastType.ERROR}
-            />
+            <Toast text={'Unable to fetch memes'} type={EToastType.ERROR} />
           );
         }
       });
@@ -66,11 +102,26 @@ const Home: FC<IHomeProps> = () => {
   };
 
   useEffect(() => {
-    loadPosts();
-  }, []);
+    setIsLoadingMore(true);
 
-  useEffect(() => {
-    console.log('sort / time changed');
+    fetchPosts()
+      .then((posts: IPost[]) => {
+        setDisplayedPosts(posts);
+      })
+      .catch((e) => {
+        console.error(e);
+
+        toast({
+          position: 'bottom-right',
+          render: () => {
+            return (
+              <Toast text={'Unable to fetch memes'} type={EToastType.ERROR} />
+            );
+          }
+        });
+      });
+
+    setIsLoadingMore(false);
   }, [sort, time]);
 
   return (
@@ -110,7 +161,7 @@ const Home: FC<IHomeProps> = () => {
               isLoading={isLoadingMore}
               loadingText="LOADING"
               spinnerPlacement="start"
-              onClick={loadPosts}
+              onClick={loadMorePosts}
             >
               LOAD MORE
             </Button>

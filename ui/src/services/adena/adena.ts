@@ -81,6 +81,8 @@ export class AdenaService {
     throw new Error('unable to switch Adena network');
   }
 
+  // Sends the given messages within a transaction
+  // to the connected Gno chain through Adena
   static async sendTransaction(
     messages: TMessage[],
     gasWanted: number

@@ -1,9 +1,11 @@
 import { IUploadProps } from './upload.types.ts';
 import React, { FC, useRef, useState } from 'react';
 import { Box, Button, useToast } from '@chakra-ui/react';
-import { MdCloudUpload } from 'react-icons/md';
 import Toast from '../Toast/Toast.tsx';
 import { EToastType } from '../Toast/toast.types.ts';
+import { IAccountInfo } from '../../../services/adena/adena.types.ts';
+import { AdenaService } from '../../../services/adena/adena.ts';
+import Config from '../../../config.ts';
 
 const Upload: FC<IUploadProps> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,8 +39,6 @@ const Upload: FC<IUploadProps> = () => {
       return;
     }
 
-    console.log('file selected');
-
     const reader = new FileReader();
     reader.onload = async () => {
       const image = new Image();
@@ -46,7 +46,7 @@ const Upload: FC<IUploadProps> = () => {
       // @ts-expect-error Not required
       image.src = reader.result;
 
-      image.onload = () => {
+      image.onload = async () => {
         const canvas = document.createElement('canvas');
         const maxDimension = 800;
 
@@ -70,10 +70,51 @@ const Upload: FC<IUploadProps> = () => {
         // @ts-expect-error No need to check
         ctx.drawImage(image, 0, 0, width, height);
 
-        const dataUrl = canvas.toDataURL('image/png');
+        const base64Image = canvas.toDataURL('image/png');
 
-        // TODO upload to chain
-        console.log(dataUrl);
+        try {
+          const accountInfo: IAccountInfo = await AdenaService.getAccountInfo();
+
+          await AdenaService.sendTransaction(
+            [
+              {
+                caller: accountInfo.address,
+                send: '',
+                pkg_path: Config.REALM_PATH,
+                func: 'PostMeme',
+                args: [base64Image, `${Math.floor(Date.now() / 1000)}`]
+              }
+            ],
+            1000000 // TODO define gas limit
+          );
+
+          // TODO check transaction status?
+
+          toast({
+            position: 'bottom-right',
+            render: () => {
+              return (
+                <Toast
+                  text={'Successfully posted meme!'}
+                  type={EToastType.SUCCESS}
+                />
+              );
+            }
+          });
+        } catch (e) {
+          console.error(e);
+
+          toast({
+            position: 'bottom-right',
+            render: () => {
+              return (
+                <Toast text={'Unable to post meme'} type={EToastType.ERROR} />
+              );
+            }
+          });
+        }
+
+        // TODO trigger rerender?
       };
     };
 
@@ -89,7 +130,6 @@ const Upload: FC<IUploadProps> = () => {
         loadingText={'UPLOADING'}
         variant={'buttonPrimary'}
         marginLeft={'auto'}
-        leftIcon={<MdCloudUpload />}
         as={'label'}
         htmlFor={'fileInput'}
         onClick={handleUploadClick}

@@ -1,15 +1,20 @@
 import { IPostProps } from './post.types.ts';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { Box, Button, Image, Text, useToast } from '@chakra-ui/react';
 import { TbArrowBigUpFilled } from 'react-icons/tb';
 import Toast from '../Toast/Toast.tsx';
 import { EToastType } from '../Toast/toast.types.ts';
+import { IAccountInfo } from '../../../services/adena/adena.types.ts';
+import { AdenaService } from '../../../services/adena/adena.ts';
+import Config from '../../../config.ts';
+import AccountContext from '../../../context/AccountContext.ts';
 
 const Post: FC<IPostProps> = (props) => {
   const { post } = props;
 
   const toast = useToast();
   const [upvoteDisabled, setUpvoteDisabled] = useState<boolean>(false);
+  const { address } = useContext(AccountContext);
 
   const constructImageSrc = (data: string): string => {
     return `data:image/png;base64,${data}`;
@@ -18,11 +23,39 @@ const Post: FC<IPostProps> = (props) => {
   const handleUpvote = async () => {
     setUpvoteDisabled(true);
 
-    // Temporary
-    setTimeout(() => {
+    if (!address) {
+      // Wallet not connected
+      toast({
+        position: 'bottom-right',
+        render: () => {
+          return (
+            <Toast text={'Wallet not connected'} type={EToastType.ERROR} />
+          );
+        }
+      });
+
       setUpvoteDisabled(false);
 
-      // TODO add Adena code
+      return;
+    }
+
+    try {
+      const accountInfo: IAccountInfo = await AdenaService.getAccountInfo();
+
+      await AdenaService.sendTransaction(
+        [
+          {
+            caller: accountInfo.address,
+            send: '',
+            pkg_path: Config.REALM_PATH,
+            func: 'Upvote',
+            args: [post.id]
+          }
+        ],
+        1000000 // TODO define gas limit
+      );
+
+      // TODO check transaction status?
 
       toast({
         position: 'bottom-right',
@@ -35,9 +68,20 @@ const Post: FC<IPostProps> = (props) => {
           );
         }
       });
-    }, 1000);
+    } catch (e) {
+      console.error(e);
 
-    console.log('Attempted to upvote!');
+      toast({
+        position: 'bottom-right',
+        render: () => {
+          return (
+            <Toast text={'Unable to upvote meme'} type={EToastType.ERROR} />
+          );
+        }
+      });
+    }
+
+    setUpvoteDisabled(false);
   };
 
   return (

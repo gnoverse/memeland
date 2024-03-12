@@ -7,6 +7,7 @@ import { EToastType } from '../Toast/toast.types.ts';
 import { IAccountInfo } from '../../../services/adena/adena.types.ts';
 import Config from '../../../config.ts';
 import AccountContext from '../../../context/AccountContext.ts';
+import Adena from '../../../shared/assets/img/adena.svg?react';
 
 const Connect: FC<IConnectProps> = () => {
   const toast = useToast();
@@ -22,7 +23,7 @@ const Connect: FC<IConnectProps> = () => {
 
       // Get the account info
       const info: IAccountInfo = await AdenaService.getAccountInfo();
-      
+
       // Make sure the network is valid
       await AdenaService.switchNetwork(Config.CHAIN_ID);
 
@@ -67,6 +68,14 @@ const Connect: FC<IConnectProps> = () => {
       variant={'buttonPrimary'}
       marginLeft={'auto'}
       onClick={handleWalletConnect}
+      leftIcon={
+        <Adena
+          style={{
+            width: '20px',
+            height: 'auto'
+          }}
+        />
+      }
     >
       CONNECT WALLET
     </Button>
