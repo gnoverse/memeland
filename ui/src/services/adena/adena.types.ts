@@ -43,10 +43,22 @@ export interface INetworkSwitchInfo {
   chainId: string;
 }
 
+export enum EMessageType {
+  MSG_SEND = '/bank.MsgSend',
+  MSG_CALL = '/vm.m_call',
+  MSG_ADD_PKG = '/vm.m_addpkg',
+  MSG_RUN = '/vm.m_run'
+}
+
 export type TMessage = MsgAddPackage | MsgCall | MsgSend | MsgRun;
 
+export interface IAdenaMessage {
+  type: EMessageType;
+  value: TMessage;
+}
+
 export interface IAdenaTransaction {
-  messages: TMessage[];
+  messages: IAdenaMessage[];
   gasFee: number;
   gasWanted: number;
   memo?: string;

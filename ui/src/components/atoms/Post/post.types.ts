@@ -1,9 +1,8 @@
-// temporary
 export interface IPost {
   id: string;
-  image: string;
+  data: string;
   author: string;
-  date: Date;
+  timestamp: number;
   upvotes: number;
 }
 

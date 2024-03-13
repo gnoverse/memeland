@@ -4,7 +4,10 @@ import { Box, Button, Image, Text, useToast } from '@chakra-ui/react';
 import { TbArrowBigUpFilled } from 'react-icons/tb';
 import Toast from '../Toast/Toast.tsx';
 import { EToastType } from '../Toast/toast.types.ts';
-import { IAccountInfo } from '../../../services/adena/adena.types.ts';
+import {
+  EMessageType,
+  IAccountInfo
+} from '../../../services/adena/adena.types.ts';
 import { AdenaService } from '../../../services/adena/adena.ts';
 import Config from '../../../config.ts';
 import AccountContext from '../../../context/AccountContext.ts';
@@ -45,17 +48,20 @@ const Post: FC<IPostProps> = (props) => {
       await AdenaService.sendTransaction(
         [
           {
-            caller: accountInfo.address,
-            send: '',
-            pkg_path: Config.REALM_PATH,
-            func: 'Upvote',
-            args: [post.id]
+            type: EMessageType.MSG_CALL,
+            value: {
+              caller: accountInfo.address,
+              send: '',
+              pkg_path: Config.REALM_PATH,
+              func: 'Upvote',
+              args: [post.id]
+            }
           }
         ],
-        1000000 // TODO define gas limit
+        500000
       );
 
-      // TODO check transaction status?
+      // TODO update upvote count
 
       toast({
         position: 'bottom-right',
@@ -95,7 +101,7 @@ const Post: FC<IPostProps> = (props) => {
     >
       <Image
         objectFit={'cover'}
-        src={constructImageSrc(post.image)}
+        src={constructImageSrc(post.data)}
         alt={'Meme image'}
         loading={'lazy'}
         boxSize={'500px'}
@@ -122,9 +128,10 @@ const Post: FC<IPostProps> = (props) => {
           display={'flex'}
           flexDirection={'column'}
           textAlign={'right'}
+          maxWidth={'250px'}
         >
-          <Text>{post.author}</Text>
-          <Text>{post.date.toDateString()}</Text>
+          <Text noOfLines={1}>{post.author}</Text>
+          <Text>{new Date(post.timestamp * 1000).toDateString()}</Text>
         </Box>
       </Box>
     </Box>

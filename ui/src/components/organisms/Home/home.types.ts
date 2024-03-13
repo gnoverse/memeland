@@ -37,9 +37,9 @@ export const generatePosts = (count: number): IPost[] => {
   for (let i = 0; i < count; i++) {
     posts.push({
       id: uuidv4(),
-      image: images[i % 2],
+      data: images[i % 2],
       author: authors[i % 2],
-      date: new Date(),
+      timestamp: new Date().getTime(),
       upvotes: generateNumber(1, 400)
     });
   }

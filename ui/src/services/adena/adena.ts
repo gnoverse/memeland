@@ -2,8 +2,8 @@ import {
   EAdenaResponseStatus,
   EAdenaResponseType,
   IAccountInfo,
-  IAdenaResponse,
-  TMessage
+  IAdenaMessage,
+  IAdenaResponse
 } from './adena.types.ts';
 import { BroadcastTxCommitResult } from '@gnolang/tm2-js-client';
 
@@ -84,7 +84,7 @@ export class AdenaService {
   // Sends the given messages within a transaction
   // to the connected Gno chain through Adena
   static async sendTransaction(
-    messages: TMessage[],
+    messages: IAdenaMessage[],
     gasWanted: number
   ): Promise<BroadcastTxCommitResult> {
     AdenaService.validateAdena();
