@@ -1,4 +1,4 @@
-package memeland
+package p
 
 import (
 	"strings"
