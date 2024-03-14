@@ -17,10 +17,19 @@ const Post: FC<IPostProps> = (props) => {
 
   const toast = useToast();
   const [upvoteDisabled, setUpvoteDisabled] = useState<boolean>(false);
+  const [upvoteCount, setUpvoteCount] = useState<number>(post.upvotes);
   const { address } = useContext(AccountContext);
 
-  const constructImageSrc = (data: string): string => {
-    return `data:image/png;base64,${data}`;
+  const formatUpvotes = (upvotes: number): string => {
+    if (upvotes >= 1000000) {
+      return (upvotes / 1000000).toFixed(1) + 'M';
+    }
+
+    if (upvotes >= 1000) {
+      return (upvotes / 1000).toFixed(1) + 'k';
+    }
+
+    return upvotes.toString();
   };
 
   const handleUpvote = async () => {
@@ -58,10 +67,11 @@ const Post: FC<IPostProps> = (props) => {
             }
           }
         ],
-        500000
+        5000000
       );
 
-      // TODO update upvote count
+      // Update the upvote counter
+      setUpvoteCount(upvoteCount + 1);
 
       toast({
         position: 'bottom-right',
@@ -101,7 +111,7 @@ const Post: FC<IPostProps> = (props) => {
     >
       <Image
         objectFit={'cover'}
-        src={constructImageSrc(post.data)}
+        src={post.data}
         alt={'Meme image'}
         loading={'lazy'}
         boxSize={'500px'}
@@ -121,7 +131,7 @@ const Post: FC<IPostProps> = (props) => {
           leftIcon={<TbArrowBigUpFilled />}
           onClick={handleUpvote}
         >
-          {`UPVOTE (${post.upvotes})`}
+          {`UPVOTE (${formatUpvotes(upvoteCount)})`}
         </Button>
         <Box
           ml={4}

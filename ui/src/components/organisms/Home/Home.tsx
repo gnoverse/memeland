@@ -30,6 +30,29 @@ const Home: FC<IHomeProps> = () => {
 
   const { provider } = useContext(ProviderContext);
 
+  const resetHomepage = () => {
+    setIsLoadingMore(true);
+
+    fetchPosts(1, EPostSort.DATE_CREATED)
+      .then((posts: IPost[]) => {
+        setDisplayedPosts(posts);
+      })
+      .catch((e) => {
+        console.error(e);
+
+        toast({
+          position: 'bottom-right',
+          render: () => {
+            return (
+              <Toast text={'Unable to fetch memes'} type={EToastType.ERROR} />
+            );
+          }
+        });
+      });
+
+    setIsLoadingMore(false);
+  };
+
   const constructStartTimestamp = (): number => {
     let date: Date = new Date();
 
@@ -55,13 +78,18 @@ const Home: FC<IHomeProps> = () => {
     return Math.floor(date.getTime() / 1000);
   };
 
-  const fetchPosts = async (page: number): Promise<IPost[]> => {
+  const fetchPosts = async (
+    page: number,
+    sort: EPostSort = EPostSort.UPVOTES
+  ): Promise<IPost[]> => {
     if (!provider) {
       throw new Error('invalid chain RPC URL');
     }
 
     const startTimestamp: number = constructStartTimestamp();
     const endTimestamp: number = Math.floor(new Date().getTime() / 1000);
+
+    console.log(`Fetching by ${sort}`);
 
     const response: string = await provider.evaluateExpression(
       Config.REALM_PATH,
@@ -152,7 +180,11 @@ const Home: FC<IHomeProps> = () => {
       minHeight={'100vh'}
     >
       <Box mx={10} mt={5}>
-        <Header setPostSort={setSort} setPostTime={setTime} />
+        <Header
+          setPostSort={setSort}
+          setPostTime={setTime}
+          resetHomepage={resetHomepage}
+        />
       </Box>
       <Container
         display={'flex'}

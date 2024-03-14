@@ -1,1 +1,3 @@
-export interface IUploadProps {}
+export interface IUploadProps {
+  resetHomepage: () => void;
+}

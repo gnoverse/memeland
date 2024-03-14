@@ -3,6 +3,7 @@ import React, { FC, useRef, useState } from 'react';
 import { Box, Button, useToast } from '@chakra-ui/react';
 import Toast from '../Toast/Toast.tsx';
 import { EToastType } from '../Toast/toast.types.ts';
+import Compressor from 'compressorjs';
 import {
   EMessageType,
   IAccountInfo
@@ -10,7 +11,9 @@ import {
 import { AdenaService } from '../../../services/adena/adena.ts';
 import Config from '../../../config.ts';
 
-const Upload: FC<IUploadProps> = () => {
+const Upload: FC<IUploadProps> = (props) => {
+  const { resetHomepage } = props;
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -42,91 +45,77 @@ const Upload: FC<IUploadProps> = () => {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const image = new Image();
+    new Compressor(file, {
+      quality: 0.9,
+      mimeType: 'image/jpeg',
+      convertSize: Infinity,
+      width: 600,
+      height: 600,
+      resize: 'contain',
+      strict: true,
 
-      // @ts-expect-error Not required
-      image.src = reader.result;
+      success(result: File | Blob) {
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const base64Image = reader.result;
 
-      image.onload = async () => {
-        const canvas = document.createElement('canvas');
-        const maxDimension = 500;
+          try {
+            const accountInfo: IAccountInfo =
+              await AdenaService.getAccountInfo();
 
-        let width = image.width;
-        let height = image.height;
-
-        if (width > maxDimension || height > maxDimension) {
-          if (width > height) {
-            height *= maxDimension / width;
-            width = maxDimension;
-          } else {
-            width *= maxDimension / height;
-            height = maxDimension;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        console.log(`w:${width}, h:${height}`);
-
-        const ctx = canvas.getContext('2d');
-        // @ts-expect-error No need to check
-        ctx.drawImage(image, 0, 0, width, height);
-
-        const base64Image = canvas.toDataURL('image/png').split(';base64,')[1];
-
-        console.log(base64Image);
-
-        try {
-          const accountInfo: IAccountInfo = await AdenaService.getAccountInfo();
-
-          await AdenaService.sendTransaction(
-            [
-              {
-                type: EMessageType.MSG_CALL,
-                value: {
-                  caller: accountInfo.address,
-                  send: '',
-                  pkg_path: Config.REALM_PATH,
-                  func: 'PostMeme',
-                  args: [base64Image, `${Math.floor(Date.now() / 1000)}`]
+            await AdenaService.sendTransaction(
+              [
+                {
+                  type: EMessageType.MSG_CALL,
+                  value: {
+                    caller: accountInfo.address,
+                    send: '',
+                    pkg_path: Config.REALM_PATH,
+                    func: 'PostMeme',
+                    args: [
+                      base64Image as string,
+                      `${Math.floor(Date.now() / 1000)}`
+                    ]
+                  }
                 }
+              ],
+              10000000
+            );
+
+            // Trigger a homepage reset
+            resetHomepage();
+
+            toast({
+              position: 'bottom-right',
+              render: () => {
+                return (
+                  <Toast
+                    text={'Successfully posted meme!'}
+                    type={EToastType.SUCCESS}
+                  />
+                );
               }
-            ],
-            10000000
-          );
+            });
+          } catch (e) {
+            console.error(e);
 
-          toast({
-            position: 'bottom-right',
-            render: () => {
-              return (
-                <Toast
-                  text={'Successfully posted meme!'}
-                  type={EToastType.SUCCESS}
-                />
-              );
-            }
-          });
-        } catch (e) {
-          console.error(e);
+            toast({
+              position: 'bottom-right',
+              render: () => {
+                return (
+                  <Toast text={'Unable to post meme'} type={EToastType.ERROR} />
+                );
+              }
+            });
+          }
+        };
 
-          toast({
-            position: 'bottom-right',
-            render: () => {
-              return (
-                <Toast text={'Unable to post meme'} type={EToastType.ERROR} />
-              );
-            }
-          });
-        }
-
-        // TODO trigger rerender?
-      };
-    };
-
-    reader.readAsDataURL(file);
+        reader.readAsDataURL(result);
+      },
+      error(e: Error) {
+        console.error(e.message);
+      }
+    });
 
     setIsLoading(false);
   };

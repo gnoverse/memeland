@@ -1,8 +1,8 @@
 export interface IHomeProps {}
 
 export enum EPostSort {
-  UPVOTES,
-  DATE_CREATED
+  UPVOTES = 'UPVOTES',
+  DATE_CREATED = 'DATE_CREATED'
 }
 
 export enum EPostTime {

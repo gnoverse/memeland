@@ -16,7 +16,7 @@ import AccountContext from '../../../context/AccountContext.ts';
 import Upload from '../../atoms/Upload/Upload.tsx';
 
 const Header: FC<IHeaderProps> = (props) => {
-  const { setPostSort, setPostTime } = props;
+  const { setPostSort, setPostTime, resetHomepage } = props;
 
   const { address } = useContext(AccountContext);
 
@@ -153,7 +153,7 @@ const Header: FC<IHeaderProps> = (props) => {
         <Text fontSize={'xl'}>meme.land</Text>
       </Box>
       {address ? (
-        <Upload />
+        <Upload resetHomepage={resetHomepage} />
       ) : (
         <Box display={'flex'}>
           <Connect />
