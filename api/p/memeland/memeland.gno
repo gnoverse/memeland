@@ -1,4 +1,4 @@
-package p
+package memeland
 
 import (
 	"gno.land/p/demo/avl"

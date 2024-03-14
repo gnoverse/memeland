@@ -1,4 +1,4 @@
-package r
+package memeland
 
 import (
 	"gno.land/p/demo/memeland"
