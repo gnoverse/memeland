@@ -19,13 +19,13 @@ type Post struct {
 }
 
 type Memeland struct {
-	Posts       *avl.Tree
+	Posts       []*Post
 	MemeCounter seqid.ID
 }
 
 func NewMemeland() *Memeland {
 	return &Memeland{
-		Posts: avl.NewTree(),
+		Posts: make([]*Post, 0),
 	}
 }
 
@@ -46,14 +46,14 @@ func (m *Memeland) PostMeme(data string, timestamp int64) string {
 		UpvoteTracker: avl.NewTree(),
 	}
 
-	m.Posts.Set(id, newPost)
+	m.Posts = append(m.Posts, newPost)
 
 	return id
 }
 
 func (m *Memeland) Upvote(id string) string {
-	post, exists := m.Posts.Get(id)
-	if !exists {
+	post := m.getPost(id)
+	if post == nil {
 		panic("post with specified ID does not exist")
 	}
 
@@ -68,33 +68,19 @@ func (m *Memeland) Upvote(id string) string {
 		panic("user has already upvoted this post")
 	}
 
-	m.Posts.Set(id, p)
 	p.UpvoteTracker.Set(caller, struct{}{})
 
 	return "upvote successful"
 }
 
-// GetPost - Retrieves a post
-func (m *Memeland) GetPost(id string) (*Post, bool) {
-	value, exists := m.Posts.Get(id)
-	if exists {
-		return value.(*Post), true
-	}
-	return nil, false
-}
-
-func (m *Memeland) GetPosts() []*Post {
-	var posts []*Post
-
-	m.Posts.Iterate("", "", func(key string, value interface{}) bool {
-		post := value.(*Post)
-		posts = append(posts, post)
-
-		return false
-	})
-
-	return posts
-}
+//// GetPost - Retrieves a post
+//func (m *Memeland) GetPost(id string) (*Post, bool) {
+//	value, exists := m.Posts.Get(id)
+//	if exists {
+//		return value.(*Post), true
+//	}
+//	return nil, false
+//}
 
 // GetPostsInRange returns a JSON string of posts within the given timestamp range, supporting pagination.
 func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pageSize int) string {
@@ -115,22 +101,18 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	start := time.Unix(startTimestamp, 0)
 	end := time.Unix(endTimestamp, 0)
 
-	m.Posts.Iterate("", "", func(key string, value interface{}) bool {
-		post := value.(*Post)
-
+	for _, p := range m.Posts {
 		// If post is not between given timestamps
-		if !post.Timestamp.After(start) || !post.Timestamp.Before(end) {
-			return true
+		if !p.Timestamp.After(start) || !p.Timestamp.Before(end) {
+			continue
 		}
 
 		// Only process posts within the specified count range.
 		if count >= startIndex && count < endIndex {
-			filteredPosts = append(filteredPosts, post)
+			filteredPosts = append(filteredPosts, p)
 		}
 		count++
-
-		return false
-	})
+	}
 
 	// Return JSON representation of filtered posts
 	return PostsToJSONString(filteredPosts)
@@ -170,4 +152,14 @@ func PostToJSONString(post *Post) string {
 // escapeString escapes quotes in a string for JSON compatibility.
 func escapeString(s string) string {
 	return strings.ReplaceAll(s, `"`, `\"`)
+}
+
+func (m *Memeland) getPost(id string) *Post {
+	for _, p := range m.Posts {
+		if p.ID == id {
+			return p
+		}
+	}
+
+	return nil
 }

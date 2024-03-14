@@ -120,14 +120,10 @@ func TestUpvote(t *testing.T) {
 	postID := m.PostMeme("Test meme data", now)
 
 	// Initial upvote count should be 0
-	post, exists := m.Posts.Get(postID)
-	if !exists {
-		t.Fatalf("Post with ID %s was not found after creation", postID)
-	}
+	post := m.getPost(postID)
 
-	initialPost, _ := post.(*Post)
-	if initialPost.UpvoteTracker.Size() != 0 {
-		t.Errorf("Expected initial upvotes to be 0, got %d", initialPost.UpvoteTracker.Size())
+	if post.UpvoteTracker.Size() != 0 {
+		t.Errorf("Expected initial upvotes to be 0, got %d", post.UpvoteTracker.Size())
 	}
 
 	// Upvote the post
@@ -137,13 +133,9 @@ func TestUpvote(t *testing.T) {
 	}
 
 	// Retrieve the post again and check the upvote count
-	postAfterUpvote, exists := m.Posts.Get(postID)
-	if !exists {
-		t.Fatalf("Post with ID %s was not found after upvote", postID)
-	}
+	post = m.getPost(postID)
 
-	updatedPost, _ := postAfterUpvote.(*Post)
-	if updatedPost.UpvoteTracker.Size() != 1 {
-		t.Errorf("Expected upvotes to be 1 after upvoting, got %d", updatedPost.UpvoteTracker.Size())
+	if post.UpvoteTracker.Size() != 1 {
+		t.Errorf("Expected upvotes to be 1 after upvoting, got %d", post.UpvoteTracker.Size())
 	}
 }
