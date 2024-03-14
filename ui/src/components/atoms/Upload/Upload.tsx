@@ -10,6 +10,7 @@ import {
 } from '../../../services/adena/adena.types.ts';
 import { AdenaService } from '../../../services/adena/adena.ts';
 import Config from '../../../config.ts';
+import { MdFileUpload } from 'react-icons/md';
 
 const Upload: FC<IUploadProps> = (props) => {
   const { resetHomepage } = props;
@@ -131,6 +132,7 @@ const Upload: FC<IUploadProps> = (props) => {
         htmlFor={'fileInput'}
         onClick={handleUploadClick}
         cursor={'pointer'}
+        leftIcon={<MdFileUpload />}
       >
         UPLOAD MEME
       </Button>

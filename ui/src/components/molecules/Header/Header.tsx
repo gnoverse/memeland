@@ -7,7 +7,8 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Text
+  Text,
+  useMediaQuery
 } from '@chakra-ui/react';
 import { IoChevronDownOutline } from 'react-icons/io5';
 import { EPostSort, EPostTime } from '../../organisms/Home/home.types.ts';
@@ -18,6 +19,9 @@ import Upload from '../../atoms/Upload/Upload.tsx';
 const Header: FC<IHeaderProps> = (props) => {
   const { setPostSort, setPostTime, resetHomepage } = props;
 
+  const [isMdOrSmaller] = useMediaQuery('(max-width: 62em)');
+
+  console.log(isMdOrSmaller);
   const { address } = useContext(AccountContext);
 
   return (
@@ -28,6 +32,7 @@ const Header: FC<IHeaderProps> = (props) => {
       className={'box'}
       justifyContent={'space-between'}
       alignItems={'center'}
+      flexDirection={isMdOrSmaller ? 'column' : 'row'}
     >
       <Box display={'flex'} alignItems={'center'}>
         <Box>
@@ -149,7 +154,7 @@ const Header: FC<IHeaderProps> = (props) => {
           </Menu>
         </Box>
       </Box>
-      <Box>
+      <Box my={isMdOrSmaller ? 4 : 0}>
         <Text fontSize={'xl'}>meme.land</Text>
       </Box>
       {address ? (

@@ -1,12 +1,6 @@
 import { EPostSort, EPostTime, IHomeProps } from './home.types.ts';
 import { FC, useContext, useEffect, useState } from 'react';
-import {
-  Box,
-  Button,
-  Container,
-  useMediaQuery,
-  useToast
-} from '@chakra-ui/react';
+import { Box, Button, useMediaQuery, useToast } from '@chakra-ui/react';
 import Header from '../../molecules/Header/Header.tsx';
 import Footer from '../../molecules/Footer/Footer.tsx';
 import { IPost } from '../../atoms/Post/post.types.ts';
@@ -178,49 +172,42 @@ const Home: FC<IHomeProps> = () => {
       flexDirection={'column'}
       width={'100%'}
       minHeight={'100vh'}
+      alignItems={'center'}
     >
-      <Box mx={10} mt={5}>
+      <Box mx={10} mt={5} width={isMdOrSmaller ? '95vw' : '60vw'}>
         <Header
           setPostSort={setSort}
           setPostTime={setTime}
           resetHomepage={resetHomepage}
         />
       </Box>
-      <Container
+      <Box
         display={'flex'}
         flexDirection={'column'}
-        maxW={isMdOrSmaller ? '100vw' : '95vw'}
-        mt={20}
-        width={'100%'}
+        marginLeft={'auto'}
+        marginRight={'auto'}
+        width={isMdOrSmaller ? '95vw' : '60vw'}
       >
-        <Box
-          display={'flex'}
-          flexDirection={'column'}
-          marginLeft={'auto'}
-          marginRight={'auto'}
-          mt={-20}
-        >
-          {displayedPosts.map((post: IPost, index: number) => {
-            return (
-              <Box key={index} mt={20}>
-                <Post post={post} />
-              </Box>
-            );
-          })}
-          <Box mx={'auto'} mt={20}>
-            <Button
-              variant={'buttonPrimary'}
-              isLoading={isLoadingMore}
-              loadingText="LOADING"
-              spinnerPlacement="start"
-              onClick={loadMorePosts}
-            >
-              LOAD MORE
-            </Button>
-          </Box>
+        {displayedPosts.map((post: IPost, index: number) => {
+          return (
+            <Box key={index} mt={20} mx={'auto'}>
+              <Post post={post} />
+            </Box>
+          );
+        })}
+        <Box mx={'auto'} mt={20}>
+          <Button
+            variant={'buttonPrimary'}
+            isLoading={isLoadingMore}
+            loadingText="LOADING"
+            spinnerPlacement="start"
+            onClick={loadMorePosts}
+          >
+            LOAD MORE
+          </Button>
         </Box>
-      </Container>
-      <Box display={'flex'} mb={5} mt={20} justifyContent={'center'}>
+      </Box>
+      <Box mx={10} display={'flex'} mb={5} mt={20} justifyContent={'center'}>
         <Footer />
       </Box>
     </Box>

@@ -1,9 +1,11 @@
 import { FC } from 'react';
-import { Box, IconButton, Link } from '@chakra-ui/react';
+import { Box, IconButton, Link, useMediaQuery } from '@chakra-ui/react';
 import { IFooterProps, IFooterSocial } from './footer.types.ts';
 import { BsDiscord, BsGithub, BsTelegram, BsTwitterX } from 'react-icons/bs';
 
 const Footer: FC<IFooterProps> = () => {
+  const [isMdOrSmaller] = useMediaQuery('(max-width: 62em)');
+
   const footerSocials: IFooterSocial[] = [
     {
       name: 'Discord',
@@ -31,7 +33,7 @@ const Footer: FC<IFooterProps> = () => {
     <Box
       display={'flex'}
       backgroundColor={'white'}
-      width={'30%'}
+      width={isMdOrSmaller ? '70vw' : '20vw'}
       className={'box'}
       justifyContent={'space-between'}
       alignItems={'center'}

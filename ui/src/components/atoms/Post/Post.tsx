@@ -1,6 +1,13 @@
 import { IPostProps } from './post.types.ts';
 import { FC, useContext, useState } from 'react';
-import { Box, Button, Image, Text, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Image,
+  Text,
+  useMediaQuery,
+  useToast
+} from '@chakra-ui/react';
 import { TbArrowBigUpFilled } from 'react-icons/tb';
 import Toast from '../Toast/Toast.tsx';
 import { EToastType } from '../Toast/toast.types.ts';
@@ -13,6 +20,8 @@ import Config from '../../../config.ts';
 import AccountContext from '../../../context/AccountContext.ts';
 
 const Post: FC<IPostProps> = (props) => {
+  const [isMdOrSmaller] = useMediaQuery('(max-width: 62em)');
+
   const { post } = props;
 
   const toast = useToast();
@@ -107,21 +116,20 @@ const Post: FC<IPostProps> = (props) => {
       display={'flex'}
       flexDirection={'column'}
       alignItems={'center'}
-      width={'600px'}
+      width={isMdOrSmaller ? '95vw' : '600px'}
     >
       <Image
         objectFit={'cover'}
         src={post.data}
         alt={'Meme image'}
         loading={'lazy'}
-        boxSize={'500px'}
       />
       <Box
         display={'flex'}
         justifyContent={'space-between'}
         alignItems={'center'}
         mt={4}
-        width={'500px'}
+        width={'100%'}
       >
         <Button
           isLoading={upvoteDisabled}
@@ -138,7 +146,7 @@ const Post: FC<IPostProps> = (props) => {
           display={'flex'}
           flexDirection={'column'}
           textAlign={'right'}
-          maxWidth={'250px'}
+          maxWidth={isMdOrSmaller ? '150px' : '250px'}
         >
           <Text noOfLines={1}>{post.author}</Text>
           <Text>{new Date(post.timestamp * 1000).toDateString()}</Text>
