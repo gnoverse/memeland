@@ -43,11 +43,11 @@ const Home: FC<IHomeProps> = () => {
 
         break;
       case EPostTime.THREE_MONTHS:
-        date.setDate(date.getMonth() - 3);
+        date.setMonth(date.getMonth() - 3);
 
         break;
       case EPostTime.ONE_YEAR:
-        date.setDate(date.getFullYear() - 1);
+        date.setFullYear(date.getFullYear() - 1);
 
         break;
     }
@@ -55,8 +55,7 @@ const Home: FC<IHomeProps> = () => {
     return Math.floor(date.getTime() / 1000);
   };
 
-  const fetchPosts = async (): Promise<IPost[]> => {
-    // return generatePosts(postsPerFetch);
+  const fetchPosts = async (page: number): Promise<IPost[]> => {
     if (!provider) {
       throw new Error('invalid chain RPC URL');
     }
@@ -85,10 +84,27 @@ const Home: FC<IHomeProps> = () => {
     setIsLoadingMore(true);
 
     try {
-      const posts: IPost[] = await fetchPosts();
+      const posts: IPost[] = await fetchPosts(page + 1);
 
-      setDisplayedPosts(displayedPosts.concat(posts));
-      setPage(page + 1);
+      if (posts.length > 0) {
+        // New posts to update
+        const newDisplayedPosts: IPost[] = posts.reduce(
+          (posts: IPost[], eachArr2Elem) => {
+            if (
+              displayedPosts.findIndex(
+                (eachArr1Elem) => eachArr1Elem.id === eachArr2Elem.id
+              ) === -1
+            ) {
+              posts.push(eachArr2Elem);
+            }
+            return posts;
+          },
+          [...displayedPosts]
+        );
+
+        setDisplayedPosts(newDisplayedPosts);
+        setPage(page + 1);
+      }
     } catch (e) {
       console.error(e);
 
@@ -108,7 +124,7 @@ const Home: FC<IHomeProps> = () => {
   useEffect(() => {
     setIsLoadingMore(true);
 
-    fetchPosts()
+    fetchPosts(1)
       .then((posts: IPost[]) => {
         setDisplayedPosts(posts);
       })

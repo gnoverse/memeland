@@ -3,7 +3,10 @@ import React, { FC, useRef, useState } from 'react';
 import { Box, Button, useToast } from '@chakra-ui/react';
 import Toast from '../Toast/Toast.tsx';
 import { EToastType } from '../Toast/toast.types.ts';
-import { IAccountInfo } from '../../../services/adena/adena.types.ts';
+import {
+  EMessageType,
+  IAccountInfo
+} from '../../../services/adena/adena.types.ts';
 import { AdenaService } from '../../../services/adena/adena.ts';
 import Config from '../../../config.ts';
 
@@ -48,7 +51,7 @@ const Upload: FC<IUploadProps> = () => {
 
       image.onload = async () => {
         const canvas = document.createElement('canvas');
-        const maxDimension = 800;
+        const maxDimension = 500;
 
         let width = image.width;
         let height = image.height;
@@ -66,11 +69,15 @@ const Upload: FC<IUploadProps> = () => {
         canvas.width = width;
         canvas.height = height;
 
+        console.log(`w:${width}, h:${height}`);
+
         const ctx = canvas.getContext('2d');
         // @ts-expect-error No need to check
         ctx.drawImage(image, 0, 0, width, height);
 
-        const base64Image = canvas.toDataURL('image/png');
+        const base64Image = canvas.toDataURL('image/png').split(';base64,')[1];
+
+        console.log(base64Image);
 
         try {
           const accountInfo: IAccountInfo = await AdenaService.getAccountInfo();
@@ -78,17 +85,18 @@ const Upload: FC<IUploadProps> = () => {
           await AdenaService.sendTransaction(
             [
               {
-                caller: accountInfo.address,
-                send: '',
-                pkg_path: Config.REALM_PATH,
-                func: 'PostMeme',
-                args: [base64Image, `${Math.floor(Date.now() / 1000)}`]
+                type: EMessageType.MSG_CALL,
+                value: {
+                  caller: accountInfo.address,
+                  send: '',
+                  pkg_path: Config.REALM_PATH,
+                  func: 'PostMeme',
+                  args: [base64Image, `${Math.floor(Date.now() / 1000)}`]
+                }
               }
             ],
-            1000000 // TODO define gas limit
+            10000000
           );
-
-          // TODO check transaction status?
 
           toast({
             position: 'bottom-right',
