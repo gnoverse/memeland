@@ -50,7 +50,6 @@ func (m *Memeland) PostMeme(data string, timestamp int64) string {
 	}
 
 	m.Posts = append(m.Posts, newPost)
-
 	return id
 }
 
