@@ -21,7 +21,6 @@ const Header: FC<IHeaderProps> = (props) => {
 
   const [isMdOrSmaller] = useMediaQuery('(max-width: 62em)');
 
-  console.log(isMdOrSmaller);
   const { address } = useContext(AccountContext);
 
   return (

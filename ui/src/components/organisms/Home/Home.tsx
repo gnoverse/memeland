@@ -83,7 +83,7 @@ const Home: FC<IHomeProps> = () => {
     const startTimestamp: number = constructStartTimestamp();
     const endTimestamp: number = Math.floor(new Date().getTime() / 1000);
 
-    console.log(`Fetching by ${sort}`);
+    console.log(`Sorting by ${sort}`);
 
     const response: string = await provider.evaluateExpression(
       Config.REALM_PATH,
