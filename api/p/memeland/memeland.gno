@@ -105,20 +105,18 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	startIndex := (page - 1) * pageSize
 	endIndex := startIndex + pageSize
 
-	// if page does not contain any posts
+	// If page does not contain any posts
 	if startIndex >= len(filteredPosts) {
 		return "[]"
 	}
 
-	// if page contains fewer posts than the page size
+	// If page contains fewer posts than the page size
 	if endIndex > len(filteredPosts) {
 		endIndex = len(filteredPosts)
 	}
 
-	paginatedPosts := filteredPosts[startIndex:endIndex]
-
 	// Return JSON representation of paginated and sorted posts
-	return PostsToJSONString(paginatedPosts)
+	return PostsToJSONString(filteredPosts[startIndex:endIndex])
 }
 
 // PostsToJSONString converts a slice of Post structs into a JSON string representation.
@@ -133,8 +131,8 @@ func PostsToJSONString(posts []*Post) string {
 
 		sb.WriteString(PostToJSONString(post))
 	}
-
 	sb.WriteString("]")
+
 	return sb.String()
 }
 
