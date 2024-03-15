@@ -56,7 +56,10 @@ const Home: FC<IHomeProps> = () => {
     fetchPosts(1, EPostSort.DATE_CREATED)
       .then((posts: IPost[]) => {
         setDisplayedPosts(posts);
+
         setPage(1);
+        setSort(EPostSort.DATE_CREATED);
+        setTime(EPostTime.ALL_TIME);
       })
       .catch((e) => {
         console.error(e);
