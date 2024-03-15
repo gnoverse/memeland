@@ -1,6 +1,6 @@
 import { IUploadProps } from './upload.types.ts';
 import React, { FC, useRef, useState } from 'react';
-import { Box, Button, useToast } from '@chakra-ui/react';
+import { Box, Button, Tooltip, useToast } from '@chakra-ui/react';
 import Toast from '../Toast/Toast.tsx';
 import { EToastType } from '../Toast/toast.types.ts';
 import Compressor from 'compressorjs';
@@ -123,19 +123,21 @@ const Upload: FC<IUploadProps> = (props) => {
 
   return (
     <Box>
-      <Button
-        isLoading={isLoading}
-        loadingText={'UPLOADING'}
-        variant={'buttonPrimary'}
-        marginLeft={'auto'}
-        as={'label'}
-        htmlFor={'fileInput'}
-        onClick={handleUploadClick}
-        cursor={'pointer'}
-        leftIcon={<MdFileUpload />}
-      >
-        UPLOAD MEME
-      </Button>
+      <Tooltip label="Memes are cropped to 600x600px" hasArrow>
+        <Button
+          isLoading={isLoading}
+          loadingText={'UPLOADING'}
+          variant={'buttonPrimary'}
+          marginLeft={'auto'}
+          as={'label'}
+          htmlFor={'fileInput'}
+          onClick={handleUploadClick}
+          cursor={'pointer'}
+          leftIcon={<MdFileUpload />}
+        >
+          UPLOAD MEME
+        </Button>
+      </Tooltip>
       <input
         type={'file'}
         accept={'image/*'}
