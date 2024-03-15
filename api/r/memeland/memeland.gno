@@ -31,7 +31,7 @@ func GetPostsInRange(startTimestamp, endTimestamp int64, page, pageSize int, sor
 
 func Render(path string) string {
 	// Default render is get Posts since year 2000 to now
-	postsJson := m.GetPostsInRange(952733931, time.Now().Unix(), 1, 100)
+	postsJson := m.GetPostsInRange(952733931, time.Now().Unix(), 1, 100, "DATE_CREATED")
 	if postsJson == "[]" {
 		return "no memes yet :c"
 	}
