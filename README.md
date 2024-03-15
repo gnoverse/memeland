@@ -16,7 +16,7 @@ Visit a live deployment of Meme.land at [meme.gnoteam.com](https://meme.gnoteam.
 Meme.land consists of a React frontend, and a Gno backend (smart contract).
 The frontend and backend code can be found at `ui/` and `api/` respectively.
 
-### Prerequisites
+## Prerequisites
 - NodeJS
 - Yarn
 - Gno tech stack
