@@ -124,6 +124,7 @@ const Home: FC<IHomeProps> = () => {
     fetchPosts(1, sort)
       .then((posts: IPost[]) => {
         setDisplayedPosts(posts);
+        setPage(1);
       })
       .catch((e) => {
         console.error(e);
