@@ -20,7 +20,6 @@ const Header: FC<IHeaderProps> = (props) => {
   const { setPostSort, setPostTime, resetHomepage } = props;
 
   const [isMdOrSmaller] = useMediaQuery('(max-width: 62em)');
-
   const { address } = useContext(AccountContext);
 
   return (

@@ -1,4 +1,4 @@
-import { IUploadProps } from './upload.types.ts';
+import { defaultCompressorOptions, IUploadProps } from './upload.types.ts';
 import React, { FC, useRef, useState } from 'react';
 import { Box, Button, Tooltip, useToast } from '@chakra-ui/react';
 import Toast from '../Toast/Toast.tsx';
@@ -19,11 +19,13 @@ const Upload: FC<IUploadProps> = (props) => {
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleUploadClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-      fileInputRef.current.click();
+  const handleUploadTrigger = () => {
+    if (!fileInputRef.current) {
+      return;
     }
+
+    fileInputRef.current.value = '';
+    fileInputRef.current.click();
   };
 
   const handleMemeUpload = async (
@@ -47,16 +49,11 @@ const Upload: FC<IUploadProps> = (props) => {
     }
 
     new Compressor(file, {
-      quality: 0.9,
-      mimeType: 'image/jpeg',
-      convertSize: Infinity,
-      width: 600,
-      height: 600,
-      resize: 'contain',
-      strict: true,
+      ...defaultCompressorOptions,
 
       success(result: File | Blob) {
         const reader = new FileReader();
+
         reader.onload = async () => {
           const base64Image = reader.result;
 
@@ -114,7 +111,16 @@ const Upload: FC<IUploadProps> = (props) => {
         reader.readAsDataURL(result);
       },
       error(e: Error) {
-        console.error(e.message);
+        console.error(e);
+
+        toast({
+          position: 'bottom-right',
+          render: () => {
+            return (
+              <Toast text={'Unable to parse meme'} type={EToastType.ERROR} />
+            );
+          }
+        });
       }
     });
 
@@ -131,7 +137,7 @@ const Upload: FC<IUploadProps> = (props) => {
           marginLeft={'auto'}
           as={'label'}
           htmlFor={'fileInput'}
-          onClick={handleUploadClick}
+          onClick={handleUploadTrigger}
           cursor={'pointer'}
           leftIcon={<MdFileUpload />}
         >

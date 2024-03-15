@@ -1,4 +1,4 @@
-import { IPostProps } from './post.types.ts';
+import { formatUpvotes, IPostProps } from './post.types.ts';
 import { FC, useContext, useState } from 'react';
 import {
   Box,
@@ -28,18 +28,6 @@ const Post: FC<IPostProps> = (props) => {
   const [upvoteDisabled, setUpvoteDisabled] = useState<boolean>(false);
   const [upvoteCount, setUpvoteCount] = useState<number>(post.upvotes);
   const { address } = useContext(AccountContext);
-
-  const formatUpvotes = (upvotes: number): string => {
-    if (upvotes >= 1000000) {
-      return (upvotes / 1000000).toFixed(1) + 'M';
-    }
-
-    if (upvotes >= 1000) {
-      return (upvotes / 1000).toFixed(1) + 'k';
-    }
-
-    return upvotes.toString();
-  };
 
   const handleUpvote = async () => {
     setUpvoteDisabled(true);

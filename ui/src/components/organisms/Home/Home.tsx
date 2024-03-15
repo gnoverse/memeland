@@ -1,4 +1,10 @@
-import { EPostSort, EPostTime, IHomeProps } from './home.types.ts';
+import {
+  constructStartTimestamp,
+  EPostSort,
+  EPostTime,
+  IHomeProps,
+  parsePostFetchResponse
+} from './home.types.ts';
 import { FC, useContext, useEffect, useState } from 'react';
 import { Box, Button, useMediaQuery, useToast } from '@chakra-ui/react';
 import Header from '../../molecules/Header/Header.tsx';
@@ -16,13 +22,36 @@ const Home: FC<IHomeProps> = () => {
   const [sort, setSort] = useState<EPostSort>(EPostSort.UPVOTES);
   const [time, setTime] = useState<EPostTime>(EPostTime.ALL_TIME);
 
-  const toast = useToast();
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(true);
   const postsPerFetch: number = 3;
   const [displayedPosts, setDisplayedPosts] = useState<IPost[]>([]);
   const [page, setPage] = useState<number>(1);
 
+  const toast = useToast();
   const { provider } = useContext(ProviderContext);
+
+  const fetchPosts = async (
+    page: number,
+    sort: EPostSort = EPostSort.UPVOTES
+  ): Promise<IPost[]> => {
+    if (!provider) {
+      throw new Error('invalid chain RPC URL');
+    }
+
+    const startTimestamp: number = constructStartTimestamp(time);
+    const endTimestamp: number = Math.floor(new Date().getTime() / 1000);
+
+    console.log(`Sorting by ${sort}`);
+
+    // TODO add sort call support
+    const response: string = await provider.evaluateExpression(
+      Config.REALM_PATH,
+      `GetPostsInRange(${startTimestamp},${endTimestamp},${page},${postsPerFetch})`
+    );
+
+    // Parse the posts response
+    return parsePostFetchResponse(response);
+  };
 
   const resetHomepage = () => {
     setIsLoadingMore(true);
@@ -30,6 +59,7 @@ const Home: FC<IHomeProps> = () => {
     fetchPosts(1, EPostSort.DATE_CREATED)
       .then((posts: IPost[]) => {
         setDisplayedPosts(posts);
+        setPage(1);
       })
       .catch((e) => {
         console.error(e);
@@ -42,64 +72,10 @@ const Home: FC<IHomeProps> = () => {
             );
           }
         });
+      })
+      .finally(() => {
+        setIsLoadingMore(false);
       });
-
-    setIsLoadingMore(false);
-  };
-
-  const constructStartTimestamp = (): number => {
-    let date: Date = new Date();
-
-    switch (time) {
-      case EPostTime.ALL_TIME:
-        date = new Date(0); // zero time
-
-        break;
-      case EPostTime.TWO_WEEKS:
-        date.setDate(date.getDate() - 14);
-
-        break;
-      case EPostTime.THREE_MONTHS:
-        date.setMonth(date.getMonth() - 3);
-
-        break;
-      case EPostTime.ONE_YEAR:
-        date.setFullYear(date.getFullYear() - 1);
-
-        break;
-    }
-
-    return Math.floor(date.getTime() / 1000);
-  };
-
-  const fetchPosts = async (
-    page: number,
-    sort: EPostSort = EPostSort.UPVOTES
-  ): Promise<IPost[]> => {
-    if (!provider) {
-      throw new Error('invalid chain RPC URL');
-    }
-
-    const startTimestamp: number = constructStartTimestamp();
-    const endTimestamp: number = Math.floor(new Date().getTime() / 1000);
-
-    console.log(`Sorting by ${sort}`);
-
-    const response: string = await provider.evaluateExpression(
-      Config.REALM_PATH,
-      `GetPostsInRange(${startTimestamp},${endTimestamp},${page},${postsPerFetch})`
-    );
-
-    // Parse the posts response
-    const regex = /\("(.*)".*\)/;
-    const match = response.match(regex);
-    if (!match || match.length < 2) {
-      throw new Error('invalid post response');
-    }
-
-    const cleanResponse: string = match[1].replace(/\\"/g, '"');
-
-    return JSON.parse(cleanResponse);
   };
 
   const loadMorePosts = async () => {
@@ -108,25 +84,24 @@ const Home: FC<IHomeProps> = () => {
     try {
       const posts: IPost[] = await fetchPosts(page + 1);
 
-      if (posts.length > 0) {
-        // New posts to update
-        const newDisplayedPosts: IPost[] = posts.reduce(
-          (posts: IPost[], eachArr2Elem) => {
-            if (
-              displayedPosts.findIndex(
-                (eachArr1Elem) => eachArr1Elem.id === eachArr2Elem.id
-              ) === -1
-            ) {
-              posts.push(eachArr2Elem);
-            }
-            return posts;
-          },
-          [...displayedPosts]
-        );
-
-        setDisplayedPosts(newDisplayedPosts);
-        setPage(page + 1);
+      if (posts.length === 0) {
+        // No new posts to show
+        return;
       }
+
+      // Just in case, filter out returned posts that match
+      // whatever is displayed
+      const newPosts: IPost[] = posts.filter((post) =>
+        displayedPosts.every((displayedPost) => displayedPost.id !== post.id)
+      );
+
+      if (newPosts.length === 0) {
+        // No new posts to show
+        return;
+      }
+
+      setDisplayedPosts(displayedPosts.concat(newPosts));
+      setPage(page + 1);
     } catch (e) {
       console.error(e);
 
@@ -138,9 +113,9 @@ const Home: FC<IHomeProps> = () => {
           );
         }
       });
+    } finally {
+      setIsLoadingMore(false);
     }
-
-    setIsLoadingMore(false);
   };
 
   useEffect(() => {
@@ -161,9 +136,10 @@ const Home: FC<IHomeProps> = () => {
             );
           }
         });
+      })
+      .finally(() => {
+        setIsLoadingMore(false);
       });
-
-    setIsLoadingMore(false);
   }, [sort, time]);
 
   return (

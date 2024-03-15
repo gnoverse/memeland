@@ -4,8 +4,8 @@ import { Box, Text } from '@chakra-ui/react';
 import { IoCheckmarkCircleSharp, IoCloseCircleSharp } from 'react-icons/io5';
 
 const Toast: FC<IToastProps> = (props) => {
-  const renderIcon = () => {
-    if (props.type === EToastType.ERROR) {
+  const renderToastIcon = (type: EToastType) => {
+    if (type === EToastType.ERROR) {
       return <IoCloseCircleSharp />;
     }
 
@@ -21,7 +21,7 @@ const Toast: FC<IToastProps> = (props) => {
       width={'100%'}
       alignItems={'center'}
     >
-      {renderIcon()}
+      {renderToastIcon(props.type)}
       <Text ml={2}>{props.text}</Text>
     </Box>
   );
