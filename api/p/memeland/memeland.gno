@@ -93,7 +93,7 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 
 	// Filtering posts
 	for _, p := range m.Posts {
-		if p.Timestamp.After(start) && p.Timestamp.Before(end) {
+		if !p.Timestamp.Before(start) && !p.Timestamp.After(end) {
 			filteredPosts = append(filteredPosts, p)
 		}
 	}
