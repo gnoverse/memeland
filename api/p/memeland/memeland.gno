@@ -105,10 +105,12 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	startIndex := (page - 1) * pageSize
 	endIndex := startIndex + pageSize
 
+	// if page does not contain any posts
 	if startIndex >= len(filteredPosts) {
-		panic("page size too large")
+		return "[]"
 	}
 
+	// if page contains fewer posts than the page size
 	if endIndex > len(filteredPosts) {
 		endIndex = len(filteredPosts)
 	}
