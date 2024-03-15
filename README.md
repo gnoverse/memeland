@@ -1,12 +1,12 @@
 # Meme.land - A Gno Meme Sharing Platform
 
-**Meme.land** is a meme (funny internet image) sharing platform build on top 
+**Meme.land** is a meme (funny internet image) sharing platform built on top 
 of the Gno.land blockchain tech stack.
 
 Meme.land allows you to connect with your Gno.land wallet, share memes with your 
 friends and coworkers, and upvote the funniest ones.
 
-Meme.land is built using the Gno.land tech stack, utilizing the Gno programming
+Built using the Gno.land tech stack, Meme.land utilizes the Gno programming
 language for its backend, and a classic React UI using `vite`.
 
 Visit a live deployment of Meme.land at [meme.gnoteam.com](https://meme.gnoteam.com) (staging).
