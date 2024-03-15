@@ -51,7 +51,7 @@ func TestGetPostsInRangePagination(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(ufmt.Sprintf("Page%d_Size%d", tc.page, tc.pageSize), func(t *testing.T) {
-			result := m.GetPostsInRange(beforeEarliest.Unix(), afterLatest.Unix(), tc.page, tc.pageSize, false)
+			result := m.GetPostsInRange(beforeEarliest.Unix(), afterLatest.Unix(), tc.page, tc.pageSize, "DATE_CREATED")
 
 			// Count posts by how many times id: shows up in JSON string
 			postCount := strings.Count(result, `"id":"`)
@@ -87,7 +87,7 @@ func TestGetPostsInRangeByTimestamp(t *testing.T) {
 		afterLatest.Unix(),    // end at latest post
 		1,                     // first page
 		numOfPosts,            // all memes on the page
-		false,                 // do not sort by upvote
+		"DATE_CREATED",        // do not sort by upvote
 	)
 
 	if jsonStr == "" {
@@ -176,7 +176,7 @@ func TestGetPostsInRangeByUpvote(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Sort by Upvote descending
-			jsonStr := m.GetPostsInRange(tc.startTimestamp, tc.endTimestamp, tc.page, tc.pageSize, true)
+			jsonStr := m.GetPostsInRange(tc.startTimestamp, tc.endTimestamp, tc.page, tc.pageSize, "UPVOTES")
 
 			if jsonStr == "" {
 				t.Error("Expected non-empty JSON string, got empty string")
