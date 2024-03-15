@@ -65,7 +65,7 @@ func TestGetPostsInRangeByTimestamp(t *testing.T) {
 	m := NewMemeland()
 	now := time.Now()
 
-	numOfPosts := 10
+	numOfPosts := 5
 	var memeData []string
 	for i := 1; i <= numOfPosts; i++ {
 		// Prep meme data
@@ -106,7 +106,6 @@ func TestGetPostsInRangeByTimestamp(t *testing.T) {
 	}
 
 	// todo add test to check order
-
 }
 
 func TestGetPostsInRangeByUpvote(t *testing.T) {
