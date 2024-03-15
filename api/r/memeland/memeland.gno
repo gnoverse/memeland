@@ -21,12 +21,12 @@ func Upvote(id string) string {
 	return m.Upvote(id)
 }
 
-func GetPostsInRange(startTimestamp, endTimestamp int64, page, pageSize int, sortByUpvote bool) string {
+func GetPostsInRange(startTimestamp, endTimestamp int64, page, pageSize int, sortBy string) string {
 	if m == nil {
 		return "memeland does not exist"
 	}
 
-	return m.GetPostsInRange(startTimestamp, endTimestamp, page, pageSize, sortByUpvote)
+	return m.GetPostsInRange(startTimestamp, endTimestamp, page, pageSize, sortBy)
 }
 
 func Render(path string) string {

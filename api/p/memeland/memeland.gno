@@ -77,7 +77,7 @@ func (m *Memeland) Upvote(id string) string {
 }
 
 // GetPostsInRange returns a JSON string of posts within the given timestamp range, supporting pagination.
-func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pageSize int, sortByUpvote bool) string {
+func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pageSize int, sortBy string) string {
 	if page < 1 {
 		panic("page count cannot be less than 1")
 	}
@@ -99,7 +99,7 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	}
 
 	// Sort by upvote descending
-	if sortByUpvote {
+	if sortBy == "UPVOTES" {
 		sort.Sort(UpvoteSorter(filteredPosts))
 	}
 
