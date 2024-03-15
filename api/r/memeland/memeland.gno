@@ -1,7 +1,7 @@
 package memeland
 
 import (
-	memeland "gno.land/p/demo/staging/memeland/v1"
+	"gno.land/demo/p/memeland"
 	"time"
 )
 
