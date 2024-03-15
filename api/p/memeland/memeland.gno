@@ -88,7 +88,7 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 
 	var filteredPosts []*Post
 
-	start := time.Unix(startTimestamp, 0) // todo should we make the timestamps inclusive in search?
+	start := time.Unix(startTimestamp, 0)
 	end := time.Unix(endTimestamp, 0)
 
 	// Filtering posts
@@ -107,7 +107,10 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	startIndex := (page - 1) * pageSize
 	endIndex := startIndex + pageSize
 
-	// todo add check if pages are too big for amount of posts
+	if startIndex >= len(filteredPosts) {
+		panic("page size too large")
+	}
+
 	if endIndex > len(filteredPosts) {
 		endIndex = len(filteredPosts)
 	}

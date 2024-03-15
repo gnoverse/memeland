@@ -194,8 +194,6 @@ func TestGetPostsInRangeByUpvote(t *testing.T) {
 				}
 			}
 
-			println(jsonStr)
-
 			// todo add test to check order
 		})
 	}
