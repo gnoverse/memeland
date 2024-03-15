@@ -47,8 +47,7 @@ func TestGetPostsInRangePagination(t *testing.T) {
 		{page: 1, pageSize: numOfPosts, expectedNumOfPosts: numOfPosts},     // all posts on single page
 		{page: 12, pageSize: 1, expectedNumOfPosts: 0},                      // empty page
 		{page: 1, pageSize: numOfPosts + 1, expectedNumOfPosts: numOfPosts}, // page with fewer posts than its size
-
-		{page: 5, pageSize: numOfPosts / 5, expectedNumOfPosts: 2}, // evenly distribute posts per page
+		{page: 5, pageSize: numOfPosts / 5, expectedNumOfPosts: 2},          // evenly distribute posts per page
 	}
 
 	for _, tc := range testCases {
