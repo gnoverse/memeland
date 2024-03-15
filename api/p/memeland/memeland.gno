@@ -98,9 +98,12 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 		}
 	}
 
+	switch sortBy {
 	// Sort by upvote descending
-	if sortBy == "UPVOTES" {
+	case "UPVOTES":
 		sort.Sort(UpvoteSorter(filteredPosts))
+	default:
+		break
 	}
 
 	// Pagination
