@@ -59,18 +59,13 @@ func (m *Memeland) Upvote(id string) string {
 		panic("post with specified ID does not exist")
 	}
 
-	p, ok := post.(*Post)
-	if !ok {
-		panic("error casting post")
-	}
-
 	caller := std.PrevRealm().Addr().String()
 
-	if _, exists := p.UpvoteTracker.Get(caller); exists {
+	if _, exists := post.UpvoteTracker.Get(caller); exists {
 		panic("user has already upvoted this post")
 	}
 
-	p.UpvoteTracker.Set(caller, struct{}{})
+	post.UpvoteTracker.Set(caller, struct{}{})
 
 	return "upvote successful"
 }
