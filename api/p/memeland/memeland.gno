@@ -97,7 +97,8 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	case "UPVOTES":
 		sort.Sort(UpvoteSorter(filteredPosts))
 	default:
-		break
+		// Sort by timestamp, beginning with newest
+		filteredPosts = reversePosts(filteredPosts)
 	}
 
 	// Pagination
@@ -162,6 +163,13 @@ func (m *Memeland) getPost(id string) *Post {
 	}
 
 	return nil
+}
+
+func reversePosts(posts []*Post) []*Post {
+	for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
+		posts[i], posts[j] = posts[j], posts[i]
+	}
+	return posts
 }
 
 func (a UpvoteSorter) Len() int      { return len(a) }
