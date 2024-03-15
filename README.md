@@ -1,4 +1,4 @@
-# Meme.land - Meme Sharing Platform
+# Meme.land - A Gno Meme Sharing Platform
 
 **Meme.land** is a meme (funny internet image) sharing platform build on top 
 of the Gno.land blockchain tech stack.
