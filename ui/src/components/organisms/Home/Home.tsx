@@ -43,7 +43,7 @@ const Home: FC<IHomeProps> = () => {
 
     const response: string = await provider.evaluateExpression(
       Config.REALM_PATH,
-      `GetPostsInRange(${startTimestamp},${endTimestamp},${page},${postsPerFetch},${sort})`
+      `GetPostsInRange(${startTimestamp},${endTimestamp},${page},${postsPerFetch},"${sort}")`
     );
 
     // Parse the posts response
@@ -79,7 +79,7 @@ const Home: FC<IHomeProps> = () => {
     setIsLoadingMore(true);
 
     try {
-      const posts: IPost[] = await fetchPosts(page + 1);
+      const posts: IPost[] = await fetchPosts(page + 1, sort);
 
       if (posts.length === 0) {
         // No new posts to show
@@ -118,7 +118,7 @@ const Home: FC<IHomeProps> = () => {
   useEffect(() => {
     setIsLoadingMore(true);
 
-    fetchPosts(1)
+    fetchPosts(1, sort)
       .then((posts: IPost[]) => {
         setDisplayedPosts(posts);
       })
@@ -163,7 +163,7 @@ const Home: FC<IHomeProps> = () => {
       >
         {displayedPosts.map((post: IPost, index: number) => {
           return (
-            <Box key={index} mt={20} mx={'auto'}>
+            <Box key={`${index}-${post.id}`} mt={20} mx={'auto'}>
               <Post post={post} />
             </Box>
           );
