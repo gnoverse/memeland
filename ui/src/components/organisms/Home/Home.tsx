@@ -41,12 +41,9 @@ const Home: FC<IHomeProps> = () => {
     const startTimestamp: number = constructStartTimestamp(time);
     const endTimestamp: number = Math.floor(new Date().getTime() / 1000);
 
-    console.log(`Sorting by ${sort}`);
-
-    // TODO add sort call support
     const response: string = await provider.evaluateExpression(
       Config.REALM_PATH,
-      `GetPostsInRange(${startTimestamp},${endTimestamp},${page},${postsPerFetch})`
+      `GetPostsInRange(${startTimestamp},${endTimestamp},${page},${postsPerFetch},${sort})`
     );
 
     // Parse the posts response
