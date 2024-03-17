@@ -165,7 +165,6 @@ func TestGetPostsInRangeByUpvote(t *testing.T) {
 	if strings.Index(jsonStr, "Meme #1") > strings.Index(jsonStr, "Meme #2") {
 		t.Errorf("Expected %s to be before %s", memeData1, memeData2)
 	}
-
 }
 
 func TestNoPosts(t *testing.T) {
@@ -179,7 +178,6 @@ func TestNoPosts(t *testing.T) {
 	if jsonStr != "[]" {
 		t.Errorf("Expected 0 posts to return [], got %s", jsonStr)
 	}
-
 }
 
 func TestUpvote(t *testing.T) {

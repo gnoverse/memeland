@@ -1,14 +1,15 @@
 package memeland
 
 import (
-	"gno.land/p/demo/avl"
-	"gno.land/p/demo/ownable"
-	"gno.land/p/demo/seqid"
 	"sort"
 	"std"
 	"strconv"
 	"strings"
 	"time"
+
+	"gno.land/p/demo/avl"
+	"gno.land/p/demo/ownable"
+	"gno.land/p/demo/seqid"
 )
 
 // Post - as previously defined
