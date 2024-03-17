@@ -224,6 +224,12 @@ func TestDelete(t *testing.T) {
 	bob := testutils.TestAddress("bob")
 	std.TestSetOrigCaller(bob)
 
-	// should panic. How to catch panic? do we support recover?
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("code did not panic when in should have")
+		}
+	}()
+
+	// Should panic - caught by defer
 	m.RemovePost(postID)
 }
