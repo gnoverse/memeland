@@ -189,11 +189,11 @@ func (m *Memeland) getPost(id string) *Post {
 	return nil
 }
 
-// Sort by date
+// Sort by newest first
 func (a DateSorter) Len() int      { return len(a) }
 func (a DateSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 func (a DateSorter) Less(i, j int) bool {
-	return a[i].Timestamp.After(a[j].Timestamp)
+	return a[i].Timestamp.Before(a[j].Timestamp)
 }
 
 // Sort by upvote count
