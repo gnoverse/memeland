@@ -209,3 +209,21 @@ func TestUpvote(t *testing.T) {
 		t.Errorf("Expected upvotes to be 1 after upvoting, got %d", post.UpvoteTracker.Size())
 	}
 }
+
+func TestDelete(t *testing.T) {
+	alice := testutils.TestAddress("alice")
+	std.TestSetOrigCaller(alice)
+
+	m := NewMemeland()
+
+	// Add a post to Memeland
+	now := time.Now()
+	postID := m.PostMeme("Meme #1", now.Unix())
+
+	// Bob will try to delete meme posted by Alice
+	bob := testutils.TestAddress("bob")
+	std.TestSetOrigCaller(bob)
+
+	// should panic. How to catch panic? do we support recover?
+	m.RemovePost(postID)
+}
