@@ -12,7 +12,6 @@ import (
 	"gno.land/p/demo/seqid"
 )
 
-// Post - as previously defined
 type Post struct {
 	ID            string
 	Data          string
@@ -21,14 +20,14 @@ type Post struct {
 	UpvoteTracker *avl.Tree // address > struct{}{}
 }
 
+type UpvoteSorter []*Post
+type DateSorter []*Post
+
 type Memeland struct {
 	*ownable.Ownable
 	Posts       []*Post
 	MemeCounter seqid.ID
 }
-
-type UpvoteSorter []*Post
-type DateSorter []*Post
 
 func NewMemeland() *Memeland {
 	return &Memeland{
