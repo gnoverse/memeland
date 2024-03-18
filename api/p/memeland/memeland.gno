@@ -20,6 +20,9 @@ type Post struct {
 	UpvoteTracker *avl.Tree // address > struct{}{}
 }
 
+type UpvoteSorter []*Post
+type DateSorter []*Post
+
 type Memeland struct {
 	*ownable.Ownable
 	Posts       []*Post
@@ -100,22 +103,10 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	switch sortBy {
 	// Sort by upvote descending
 	case "UPVOTES":
-		dateSorter := PostSorter{
-			posts: filteredPosts,
-			less: func(i, j int) bool {
-				return filteredPosts[i].UpvoteTracker.Size() > filteredPosts[j].UpvoteTracker.Size()
-			},
-		}
-		sort.Sort(dateSorter)
+		sort.Sort(UpvoteSorter(filteredPosts))
 	default:
 		// Sort by timestamp, beginning with newest
-		dateSorter := PostSorter{
-			posts: filteredPosts,
-			less: func(i, j int) bool {
-				return filteredPosts[i].Timestamp.Before(filteredPosts[j].Timestamp)
-			},
-		}
-		sort.Sort(dateSorter)
+		sort.Sort(DateSorter(filteredPosts))
 	}
 
 	// Pagination
@@ -198,36 +189,16 @@ func (m *Memeland) getPost(id string) *Post {
 	return nil
 }
 
-type PostSorter struct {
-	posts []*Post
-	less  func(i, j int) bool
+// Sort by newest first
+func (a DateSorter) Len() int      { return len(a) }
+func (a DateSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a DateSorter) Less(i, j int) bool {
+	return a[i].Timestamp.Before(a[j].Timestamp)
 }
 
-func (p PostSorter) Len() int {
-	return len(p.posts)
+// Sort by upvote count
+func (a UpvoteSorter) Len() int      { return len(a) }
+func (a UpvoteSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a UpvoteSorter) Less(i, j int) bool {
+	return a[i].UpvoteTracker.Size() > a[j].UpvoteTracker.Size()
 }
-
-func (p PostSorter) Swap(i, j int) {
-	p.posts[i], p.posts[j] = p.posts[j], p.posts[i]
-}
-
-func (p PostSorter) Less(i, j int) bool {
-	return p.Less(i, j)
-}
-
-//type UpvoteSorter []*Post
-//type DateSorter []*Post
-//
-//// Sort by newest first
-//func (a DateSorter) Len() int      { return len(a) }
-//func (a DateSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-//func (a DateSorter) Less(i, j int) bool {
-//	return a[i].Timestamp.Before(a[j].Timestamp)
-//}
-//
-//// Sort by upvote count
-//func (a UpvoteSorter) Len() int      { return len(a) }
-//func (a UpvoteSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-//func (a UpvoteSorter) Less(i, j int) bool {
-//	return a[i].UpvoteTracker.Size() > a[j].UpvoteTracker.Size()
-//}
