@@ -78,7 +78,7 @@ gnodev ./api/p/memeland ./api/r/memeland
 ```
 
 Running this command will spin up a local node that the Meme.land UI 
-Will be able to connect to.
+will be able to connect to.
 
 #### 3. Start the frontend with `vite`
 
