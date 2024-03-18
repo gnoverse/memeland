@@ -66,16 +66,19 @@ make build && make install
 make build && make install
 ```
 
-3. Install the `gnodev` binary by running:
-
+3. In the root of the Gno repo, install the `gnodev` binary by running:
 ```bash
 make install.gnodev
 ```
- 
-in the root repo folder.
 
-Finally run the `gnodev` binary. Running this command will spin up a local node
-that the Meme.land UI Will be able to connect to.
+Finally run the `gnodev` binary in the memeland repo, giving it paths
+to the package and realm:
+```bash
+gnodev ./api/p/memeland ./api/r/memeland 
+```
+
+Running this command will spin up a local node that the Meme.land UI 
+Will be able to connect to.
 
 #### 3. Start the frontend with `vite`
 
