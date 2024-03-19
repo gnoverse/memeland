@@ -30,6 +30,10 @@ func RemovePost(id string) string {
 	return m.RemovePost(id)
 }
 
+func GetOwner() std.Address {
+	return m.Owner()
+}
+
 func TransferOwnership(newOwner std.Address) {
 	if err := m.TransferOwnership(newOwner); err != nil {
 		panic(err)
