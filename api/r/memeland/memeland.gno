@@ -4,7 +4,7 @@ import (
 	"std"
 	"time"
 
-	"gno.land/p/demo/memeland"
+	memeland "gno.land/p/demo/staging/memeland/v2"
 )
 
 var m *memeland.Memeland
