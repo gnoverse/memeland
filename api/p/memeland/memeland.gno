@@ -71,7 +71,7 @@ func (m *Memeland) Upvote(id string) string {
 	return "upvote successful"
 }
 
-// GetPostsInRange returns a JSON string of posts within the given timestamp range, supporting pagination.
+// GetPostsInRange returns a JSON string of posts within the given timestamp range, supporting pagination
 func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pageSize int, sortBy string) string {
 	if len(m.Posts) == 0 {
 		return "[]"
@@ -81,8 +81,14 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 		panic("page count cannot be less than 1")
 	}
 
+	// No empty pages
 	if pageSize < 1 {
 		panic("page size cannot be less than 1")
+	}
+
+	// No pages larger than 10
+	if pageSize > 10 {
+		panic("page size cannot be larger than 10")
 	}
 
 	var filteredPosts []*Post
@@ -101,8 +107,8 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	// Sort by upvote descending
 	case "UPVOTES":
 		dateSorter := PostSorter{
-			posts: filteredPosts,
-			less: func(i, j int) bool {
+			Posts: filteredPosts,
+			LessF: func(i, j int) bool {
 				return filteredPosts[i].UpvoteTracker.Size() > filteredPosts[j].UpvoteTracker.Size()
 			},
 		}
@@ -110,8 +116,8 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	default:
 		// Sort by timestamp, beginning with newest
 		dateSorter := PostSorter{
-			posts: filteredPosts,
-			less: func(i, j int) bool {
+			Posts: filteredPosts,
+			LessF: func(i, j int) bool {
 				return filteredPosts[i].Timestamp.Before(filteredPosts[j].Timestamp)
 			},
 		}
@@ -136,6 +142,7 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	return PostsToJSONString(filteredPosts[startIndex:endIndex])
 }
 
+// RemovePost allows the owner to remove a post with a specific ID
 func (m *Memeland) RemovePost(id string) string {
 	if err := m.CallerIsOwner(); err != nil {
 		panic(err)
@@ -152,7 +159,7 @@ func (m *Memeland) RemovePost(id string) string {
 	panic("post with specified id does not exist")
 }
 
-// PostsToJSONString converts a slice of Post structs into a JSON string representation.
+// PostsToJSONString converts a slice of Post structs into a JSON string
 func PostsToJSONString(posts []*Post) string {
 	var sb strings.Builder
 	sb.WriteString("[")
@@ -169,6 +176,7 @@ func PostsToJSONString(posts []*Post) string {
 	return sb.String()
 }
 
+// PostToJSONString returns a Post formatted as a JSON string
 func PostToJSONString(post *Post) string {
 	var sb strings.Builder
 
@@ -198,36 +206,20 @@ func (m *Memeland) getPost(id string) *Post {
 	return nil
 }
 
+// PostSorter is a flexible sorter for the *Post slice
 type PostSorter struct {
-	posts []*Post
-	less  func(i, j int) bool
+	Posts []*Post
+	LessF func(i, j int) bool
 }
 
 func (p PostSorter) Len() int {
-	return len(p.posts)
+	return len(p.Posts)
 }
 
 func (p PostSorter) Swap(i, j int) {
-	p.posts[i], p.posts[j] = p.posts[j], p.posts[i]
+	p.Posts[i], p.Posts[j] = p.Posts[j], p.Posts[i]
 }
 
 func (p PostSorter) Less(i, j int) bool {
-	return p.Less(i, j)
+	return p.LessF(i, j)
 }
-
-//type UpvoteSorter []*Post
-//type DateSorter []*Post
-//
-//// Sort by newest first
-//func (a DateSorter) Len() int      { return len(a) }
-//func (a DateSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-//func (a DateSorter) Less(i, j int) bool {
-//	return a[i].Timestamp.Before(a[j].Timestamp)
-//}
-//
-//// Sort by upvote count
-//func (a UpvoteSorter) Len() int      { return len(a) }
-//func (a UpvoteSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-//func (a UpvoteSorter) Less(i, j int) bool {
-//	return a[i].UpvoteTracker.Size() > a[j].UpvoteTracker.Size()
-//}
