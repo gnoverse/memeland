@@ -144,6 +144,10 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 
 // RemovePost allows the owner to remove a post with a specific ID
 func (m *Memeland) RemovePost(id string) string {
+	if id == "" {
+		panic("id cannot be empty")
+	}
+
 	if err := m.CallerIsOwner(); err != nil {
 		panic(err)
 	}

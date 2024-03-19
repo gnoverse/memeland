@@ -229,5 +229,7 @@ func TestDelete(t *testing.T) {
 	}()
 
 	// Should panic - caught by defer
-	m.RemovePost(postID)
+	if id := m.RemovePost(postID); id == postID {
+		t.Errorf("incorrect or empty postID returned by RemovePost")
+	}
 }
