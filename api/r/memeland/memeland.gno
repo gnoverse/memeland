@@ -1,14 +1,18 @@
 package memeland
 
 import (
+	"std"
 	"time"
 
 	"gno.land/p/demo/memeland"
 )
 
-var m = memeland.NewMemeland()
+var m *memeland.Memeland
 
-func
+func init() {
+	m = memeland.NewMemeland()
+	m.TransferOwnership("g125em6arxsnj49vx35f0n0z34putv5ty3376fg5")
+}
 
 func PostMeme(data string, timestamp int64) string {
 	return m.PostMeme(data, timestamp)
