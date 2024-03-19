@@ -152,10 +152,9 @@ func (m *Memeland) RemovePost(id string) string {
 		panic(err)
 	}
 
-	posts := m.Posts
-	for i, post := range posts {
+	for i, post := range m.Posts {
 		if post.ID == id {
-			posts = append(posts[:i], posts[i+1:]...)
+			m.Posts = append(m.Posts[:i], m.Posts[i+1:]...)
 			return id
 		}
 	}
