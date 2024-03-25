@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"gno.land/p/demo/avl"
-	"gno.land/p/demo/ownable"
 	"gno.land/p/demo/seqid"
 )
 
@@ -21,15 +20,13 @@ type Post struct {
 }
 
 type Memeland struct {
-	*ownable.Ownable
 	Posts       []*Post
 	MemeCounter seqid.ID
 }
 
 func NewMemeland() *Memeland {
 	return &Memeland{
-		Ownable: ownable.New(),
-		Posts:   make([]*Post, 0),
+		Posts: make([]*Post, 0),
 	}
 }
 
@@ -45,7 +42,7 @@ func (m *Memeland) PostMeme(data string, timestamp int64) string {
 	newPost := &Post{
 		ID:            id,
 		Data:          data,
-		Author:        std.PrevRealm().Addr(),
+		Author:        std.PrevRealm().Addr(), // gets the caller of the TX
 		Timestamp:     time.Unix(timestamp, 0),
 		UpvoteTracker: avl.NewTree(),
 	}
@@ -78,7 +75,7 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 	}
 
 	if page < 1 {
-		panic("page count cannot be less than 1")
+		panic("page cannot be less than 1")
 	}
 
 	// No empty pages
@@ -113,7 +110,7 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 			},
 		}
 		sort.Sort(dateSorter)
-	default:
+	default: // "DATE_CREATED"
 		// Sort by timestamp, beginning with newest
 		dateSorter := PostSorter{
 			Posts: filteredPosts,
@@ -140,26 +137,6 @@ func (m *Memeland) GetPostsInRange(startTimestamp, endTimestamp int64, page, pag
 
 	// Return JSON representation of paginated and sorted posts
 	return PostsToJSONString(filteredPosts[startIndex:endIndex])
-}
-
-// RemovePost allows the owner to remove a post with a specific ID
-func (m *Memeland) RemovePost(id string) string {
-	if id == "" {
-		panic("id cannot be empty")
-	}
-
-	if err := m.CallerIsOwner(); err != nil {
-		panic(err)
-	}
-
-	for i, post := range m.Posts {
-		if post.ID == id {
-			m.Posts = append(m.Posts[:i], m.Posts[i+1:]...)
-			return id
-		}
-	}
-
-	panic("post with specified id does not exist")
 }
 
 // PostsToJSONString converts a slice of Post structs into a JSON string
