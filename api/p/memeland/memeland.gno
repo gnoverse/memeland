@@ -1,4 +1,4 @@
-package memeland1
+package memeland
 
 import (
 	"sort"
