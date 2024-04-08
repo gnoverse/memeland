@@ -1,4 +1,4 @@
-package memeland
+package memeland1
 
 import (
 	"std"

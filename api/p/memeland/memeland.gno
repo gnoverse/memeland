@@ -1,4 +1,4 @@
-package memeland
+package memeland1
 
 import (
 	"sort"
@@ -10,6 +10,7 @@ import (
 	"gno.land/p/demo/avl"
 	"gno.land/p/demo/ownable"
 	"gno.land/p/demo/seqid"
+	"gno.land/r/demo/users"
 )
 
 const (
@@ -40,6 +41,12 @@ func NewMemeland() *Memeland {
 
 // PostMeme - Adds a new post
 func (m *Memeland) PostMeme(data string, timestamp int64) string {
+	caller := std.PrevRealm().Addr()
+
+	if users.GetUserByAddress(caller) == nil {
+		panic("you need to be registered in r/demo/users to post!")
+	}
+
 	if data == "" || timestamp <= 0 {
 		panic("timestamp or data cannot be empty")
 	}
@@ -50,7 +57,7 @@ func (m *Memeland) PostMeme(data string, timestamp int64) string {
 	newPost := &Post{
 		ID:            id,
 		Data:          data,
-		Author:        std.PrevRealm().Addr(),
+		Author:        caller,
 		Timestamp:     time.Unix(timestamp, 0),
 		UpvoteTracker: avl.NewTree(),
 	}

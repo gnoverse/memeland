@@ -1,10 +1,10 @@
-package memeland
+package memeland1
 
 import (
 	"std"
 	"time"
 
-	"gno.land/p/demo/memeland"
+	memeland "gno.land/p/demo/memeland1"
 )
 
 var m *memeland.Memeland
