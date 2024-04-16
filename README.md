@@ -38,11 +38,8 @@ To do this, your `.env` file should contain the following:
 ```bash
 VITE_CHAIN_ID=<gno-chain-id>
 VITE_CHAIN_RPC=<gno-chain-rpc>
-VITE_REALM_PATH=<-onchain-path-to-memeland-realm>
+VITE_REALM_PATH=<onchain-path-to-memeland-realm>
 ```
-
-For a local deployment, you can find Gno.land RPC endpoints and chain 
-IDs [here](https://docs.gno.land/reference/rpc-endpoints/).
 
 ### 4. Set up a local development node with `gnodev`
 
