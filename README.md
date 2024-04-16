@@ -38,7 +38,7 @@ To do this, your `.env` file should contain the following:
 ```bash
 VITE_CHAIN_ID=<gno-chain-id>
 VITE_CHAIN_RPC=<gno-chain-rpc>
-VITE_REALM_PATH=<path-to-memeland-realm>
+VITE_REALM_PATH=<-onchain-path-to-memeland-realm>
 ```
 
 For a local deployment, you can find Gno.land RPC endpoints and chain 
@@ -56,17 +56,12 @@ git clone git@github.com:gnolang/gno.git
 From the root of the Gno repo, install the all the necessary binaries and 
 tools following the next steps:
 
-1. Install the `gnoland` binary in the `gno.land/` folder:
+1. Install the `gno` binary in the `gnovm/` folder:
 ```bash
 make build && make install
 ```
 
-2. Install the `gno` binary in the `gnovm/` folder:
-```bash
-make build && make install
-```
-
-3. In the root of the Gno repo, install the `gnodev` binary by running:
+2. In the root of the Gno repo, install the `gnodev` binary by running:
 ```bash
 make install.gnodev
 ```
@@ -74,11 +69,14 @@ make install.gnodev
 Finally run the `gnodev` binary in the memeland repo, giving it paths
 to the package and realm:
 ```bash
-gnodev ./api/p/memeland ./api/r/memeland 
+gnodev ./api/p/memeland ./api/r/memeland
 ```
 
 Running this command will spin up a local node that the Meme.land UI 
 will be able to connect to.
+
+Make sure that the node RPC endpoint that `gnodev` is running on matches the one
+in the `.env` file.
 
 #### 3. Start the frontend with `vite`
 
