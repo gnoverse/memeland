@@ -72,7 +72,7 @@ gnodev ./api/p/memeland ./api/r/memeland
 Running this command will spin up a local node that the Meme.land UI 
 will be able to connect to.
 
-Make sure that the node RPC endpoint that `gnodev` is running on matches the one
+Make sure that the chain RPC endpoint that `gnodev` is running on matches the one
 in the `.env` file.
 
 #### 3. Start the frontend with `vite`
