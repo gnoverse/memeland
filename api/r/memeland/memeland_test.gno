@@ -53,3 +53,16 @@ func TestRemovePost(t *testing.T) {
 		t.Errorf("Expected %s to be removed, got %s", id, removedID)
 	}
 }
+
+// NOT PASS FOR THE MOMENT
+func TestTransferOwnership(t *testing.T) {
+	m := memeland.NewMemeland()
+	newOwner := "g1newowneraddress"
+	err := m.TransferOwnership(std.Address(newOwner))
+	if err != nil {
+		t.Errorf("Expected no error, got %s", err)
+	}
+	if m.Owner() != std.Address(newOwner) {
+		t.Errorf("Expected new owner to be %s, got %s", newOwner, m.Owner())
+	}
+}
