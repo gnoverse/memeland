@@ -19,7 +19,7 @@ The frontend and backend code can be found at `ui/` and `api/` respectively.
 ## Prerequisites
 - NodeJS
 - Yarn
-- Go 1.19+
+- Go 1.21+
 - [Gno tech stack](https://docs.gno.land/getting-started/local-setup)
 
 #### 1. Clone the Meme.land repo
@@ -53,17 +53,12 @@ git clone git@github.com:gnolang/gno.git
 From the root of the Gno repo, install the all the necessary binaries and 
 tools following the next steps:
 
-1. Install the `gno` binary in the `gnovm/` folder:
+1. Install the `gno` & `gnodev` binaries with the following command in the root of the cloned monorepo:
 ```bash
-make build && make install
+make install
 ```
 
-2. In the root of the Gno repo, install the `gnodev` binary by running:
-```bash
-make install.gnodev
-```
-
-Finally run the `gnodev` binary in the memeland repo, giving it paths
+2. Run the `gnodev` binary in the memeland repo, giving it paths
 to the package and realm:
 ```bash
 gnodev ./api/p/memeland ./api/r/memeland
