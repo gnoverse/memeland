@@ -18,7 +18,6 @@ The frontend and backend code can be found at `ui/` and `api/` respectively.
 - NodeJS
 - Yarn
 - Go 1.21+
-- [Gno tech stack](https://docs.gno.land/getting-started/local-setup)
 
 #### 1. Clone the Meme.land repo
 
