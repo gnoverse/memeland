@@ -9,8 +9,6 @@ friends and coworkers, and upvote the funniest ones.
 Built using the [Gno.land](https://github.com/gnolang/gno) tech stack, Meme.land utilizes the Gno programming
 language for its backend, and a classic React UI using `vite`.
 
-Visit a live deployment of Meme.land at [meme.gnoteam.com](https://meme.gnoteam.com) (staging).
-
 ## Run Meme.land locally
 
 Meme.land consists of a React frontend, and a Gno backend (smart contract).
