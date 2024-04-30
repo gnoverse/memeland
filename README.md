@@ -34,7 +34,7 @@ To do this, your `.env` file should contain the following:
 
 ```bash
 VITE_CHAIN_ID=<gno-chain-id>
-VITE_CHAIN_RPC=<gno-chain-rpc>
+VITE_CHAIN_RPC=ws://<gno-chain-rpc>/websocket
 VITE_REALM_PATH=<onchain-path-to-memeland-realm>
 ```
 
