@@ -7,6 +7,7 @@ import (
 	"sort"
 
 	"gno.land/p/demo/memeland"
+    "gno.land/p/demo/testutils"
 )
 
 func TestPostMeme(t *testing.T) {
@@ -57,7 +58,7 @@ func TestRemovePost(t *testing.T) {
 // NOT PASS FOR THE MOMENT
 func TestTransferOwnership(t *testing.T) {
 	m := memeland.NewMemeland()
-	newOwner := "g1newowneraddress"
+	newOwner := testutils.TestAddress("g1newowneraddress")
 	err := m.TransferOwnership(std.Address(newOwner))
 	if err != nil {
 		t.Errorf("Expected no error, got %s", err)
