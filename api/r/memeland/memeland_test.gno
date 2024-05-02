@@ -55,7 +55,6 @@ func TestRemovePost(t *testing.T) {
 	}
 }
 
-// NOT PASS FOR THE MOMENT
 func TestTransferOwnership(t *testing.T) {
 	m := memeland.NewMemeland()
 	newOwner := testutils.TestAddress("g1newowneraddress")
