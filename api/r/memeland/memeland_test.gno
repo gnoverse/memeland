@@ -70,12 +70,19 @@ func TestGetPostsInRange(t *testing.T) {
 	page, pageSize := 1, 10
 
 	sortBy := "DATE_CREATED"
-	m.PostMeme("Old Meme", startTimestamp-10)
-	m.PostMeme("New Meme", endTimestamp-10)
+	memeData1 := "Old Meme"
+	memeData2 := "New Meme"
 
-	result := m.GetPostsInRange(startTimestamp, endTimestamp, page, pageSize, sortBy)
-	if result == "" || result == "[]" {
-		t.Errorf("Expected non-empty result, got %s", result)
+	m.PostMeme(memeData1, startTimestamp-10)
+	m.PostMeme(memeData2, endTimestamp-10)
+
+	results := m.GetPostsInRange(startTimestamp, endTimestamp, page, pageSize, sortBy)
+	if results == "" || results == "[]" {
+		t.Errorf("Expected non-empty result, got %s", results)
+	}
+
+	if strings.Contains(results, memeData1) || !strings.Contains(results, memeData2) {
+		t.Errorf("Expected to find %s and not find %s in the JSON string, which was not the case", memeData1, memeData2)
 	}
 }
 
