@@ -10,6 +10,7 @@ import (
 	"gno.land/p/demo/avl"
 	"gno.land/p/demo/ownable"
 	"gno.land/p/demo/seqid"
+	"gno.land/r/demo/users"
 )
 
 const (
@@ -38,10 +39,21 @@ func NewMemeland() *Memeland {
 	}
 }
 
+func isUserRegistered(add std.Address) bool {
+	user := users.GetUserByAddress(add)
+	return user != nil
+}
+
 // PostMeme - Adds a new post
 func (m *Memeland) PostMeme(data string, timestamp int64) string {
 	if data == "" || timestamp <= 0 {
 		panic("timestamp or data cannot be empty")
+	}
+
+	// check address is register
+	author := std.PrevRealm().Addr()
+	if !isUserRegistered(author) {
+		panic("address not registered")
 	}
 
 	// Generate ID
@@ -50,7 +62,7 @@ func (m *Memeland) PostMeme(data string, timestamp int64) string {
 	newPost := &Post{
 		ID:            id,
 		Data:          data,
-		Author:        std.PrevRealm().Addr(),
+		Author:        author,
 		Timestamp:     time.Unix(timestamp, 0),
 		UpvoteTracker: avl.NewTree(),
 	}
