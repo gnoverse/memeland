@@ -53,7 +53,7 @@ func (m *Memeland) PostMeme(data string, timestamp int64) string {
 	// check address is register
 	author := std.PrevRealm().Addr()
 	if !isUserRegistered(author) {
-		panic("address not registered")
+		panic("address not registered. Can you go to register in r/demo/users for post after")
 	}
 
 	// Generate ID
