@@ -61,7 +61,7 @@ const Upload: FC<IUploadProps> = (props) => {
             const accountInfo: IAccountInfo =
               await AdenaService.getAccountInfo();
 
-            await AdenaService.sendTransaction(
+            const transactionResponse = await AdenaService.sendTransaction(
               [
                 {
                   type: EMessageType.MSG_CALL,
@@ -80,6 +80,12 @@ const Upload: FC<IUploadProps> = (props) => {
               10000000
             );
 
+
+            console.log("Transaction Response:", transactionResponse);
+
+            if (!transactionResponse) {
+              console.error("Transaction response is null or undefined.");
+            }
             // Trigger a homepage reset
             resetHomepage();
 
