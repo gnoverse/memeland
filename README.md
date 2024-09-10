@@ -28,7 +28,7 @@ git clone git@github.com:gnolang/memeland.git
 
 #### 2. Set up environment variables
 
-Create a `.env` file in the root of the repo following the template found in 
+Create a `.env` file in the `ui/` folder following the template found in 
 `.env.example`.
 
 To do this, your `.env` file should contain the following:
