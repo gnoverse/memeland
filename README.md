@@ -1,28 +1,26 @@
-# Meme.land - A Gno Meme Sharing Platform
+# meme.land - A Gno Meme Sharing Platform
 
-**Meme.land** is a meme (funny internet image) sharing platform built on top 
+**meme.land** is a meme (funny internet image) sharing platform built on top 
 of the Gno.land blockchain tech stack.
 
-Meme.land allows you to connect with your Gno.land wallet, share memes with your 
+meme.land allows you to connect with your Gno.land wallet, share memes with your 
 friends and coworkers, and upvote the funniest ones.
 
-Built using the [Gno.land](https://github.com/gnolang/gno) tech stack, Meme.land utilizes the Gno programming
+Built using the [Gno.land](https://github.com/gnolang/gno) tech stack, meme.land utilizes the Gno programming
 language for its backend, and a classic React UI using `vite`.
 
-Visit a live deployment of Meme.land at [meme.gnoteam.com](https://meme.gnoteam.com) (staging).
+## Run meme.land locally
 
-## Run Meme.land locally
-
-Meme.land consists of a React frontend, and a Gno backend (smart contract).
-The frontend and backend code can be found at `ui/` and `api/` respectively.
+meme.land consists of a React frontend, and a Gno backend (smart contract).
+The frontend and backend code can be found at `ui/` and `api/` respectively. 
+By following the steps below, you will be able to run your own local version of the meme.land realm with `gnodev`, as well as your local frontend with `vite`.
 
 ## Prerequisites
 - NodeJS
 - Yarn
-- Go 1.19+
-- [Gno tech stack](https://docs.gno.land/getting-started/local-setup)
+- Go 1.21+
 
-#### 1. Clone the Meme.land repo
+#### 1. Clone the meme.land repo
 
 ```bash
 git clone git@github.com:gnolang/memeland.git 
@@ -30,19 +28,16 @@ git clone git@github.com:gnolang/memeland.git
 
 #### 2. Set up environment variables
 
-Create a `.env` file in the root of the repo following the template found in 
+Create a `.env` file in the `ui/` folder following the template found in 
 `.env.example`.
 
 To do this, your `.env` file should contain the following:
 
 ```bash
 VITE_CHAIN_ID=<gno-chain-id>
-VITE_CHAIN_RPC=<gno-chain-rpc>
-VITE_REALM_PATH=<path-to-memeland-realm>
+VITE_CHAIN_RPC=wss://<gno-chain-rpc>/websocket
+VITE_REALM_PATH=<onchain-path-to-memeland-realm>
 ```
-
-For a local deployment, you can find Gno.land RPC endpoints and chain 
-IDs [here](https://docs.gno.land/reference/rpc-endpoints/).
 
 ### 4. Set up a local development node with `gnodev`
 
@@ -56,29 +51,22 @@ git clone git@github.com:gnolang/gno.git
 From the root of the Gno repo, install the all the necessary binaries and 
 tools following the next steps:
 
-1. Install the `gnoland` binary in the `gno.land/` folder:
+1. Install the `gno` & `gnodev` binaries with the following command in the root of the cloned monorepo:
 ```bash
-make build && make install
+make install
 ```
 
-2. Install the `gno` binary in the `gnovm/` folder:
-```bash
-make build && make install
-```
-
-3. In the root of the Gno repo, install the `gnodev` binary by running:
-```bash
-make install.gnodev
-```
-
-Finally run the `gnodev` binary in the memeland repo, giving it paths
+2. Run the `gnodev` binary in the memeland repo, giving it paths
 to the package and realm:
 ```bash
-gnodev ./api/p/memeland ./api/r/memeland 
+gnodev ./api/p/memeland ./api/r/memeland
 ```
 
-Running this command will spin up a local node that the Meme.land UI 
+Running this command will spin up a local node that the meme.land UI 
 will be able to connect to.
+
+Make sure that the chain RPC endpoint that `gnodev` is running on matches the one
+in the `.env` file.
 
 #### 3. Start the frontend with `vite`
 
@@ -88,7 +76,7 @@ the dependencies, run `yarn dev`.
 ### Conclusion
 
 Congratulations! You are now officially running a local frontend connected to 
-Meme.land!
+meme.land!
 
 
 
