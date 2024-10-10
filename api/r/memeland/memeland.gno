@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"gno.land/p/demo/memeland"
+
+	"gno.land/r/demo/users"
 )
 
 var m *memeland.Memeland
@@ -15,6 +17,11 @@ func init() {
 }
 
 func PostMeme(data string, timestamp int64) string {
+
+	if !isUserRegistered(std.PrevRealm().Addr()) {
+		panic("you have to register in r/demo/users to post!")
+	}
+
 	return m.PostMeme(data, timestamp)
 }
 
@@ -48,4 +55,9 @@ func Render(path string) string {
 
 	// Default render is get Posts since year 2000 to now
 	return m.GetPostsInRange(0, time.Now().Unix(), 1, 10, "DATE_CREATED")
+}
+
+func isUserRegistered(addr std.Address) bool {
+
+	return users.GetUserByAddress(addr) != nil
 }
