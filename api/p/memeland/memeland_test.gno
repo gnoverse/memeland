@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"gno.land/p/demo/seqid"
 	"gno.land/p/demo/testutils"
 	"gno.land/p/demo/ufmt"
 )
