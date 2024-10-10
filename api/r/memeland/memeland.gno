@@ -17,7 +17,6 @@ func init() {
 }
 
 func PostMeme(data string, timestamp int64) string {
-
 	if !isUserRegistered(std.PrevRealm().Addr()) {
 		panic("you have to register in r/demo/users to post!")
 	}
