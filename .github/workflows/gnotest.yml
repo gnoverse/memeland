@@ -1,0 +1,25 @@
+name: gno-test
+
+on:
+  pull_request:
+    branches:
+      - "*"
+  push:
+    branches:
+      - "*"
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'gnolang/gno'
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.2
+      - run: go install ./gnovm/cmd/gno
+      - uses: actions/checkout@v4
+      - run: gno test ./api/r/memeland ./api/p/memeland
+
