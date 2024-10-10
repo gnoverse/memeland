@@ -58,6 +58,5 @@ func Render(path string) string {
 }
 
 func isUserRegistered(addr std.Address) bool {
-
 	return users.GetUserByAddress(addr) != nil
 }
