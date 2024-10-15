@@ -12,6 +12,8 @@ import (
 )
 
 func TestPostMeme(t *testing.T) {
+	admin := std.Address("g1u7y667z64x2h7vc6fmpcprgey4ck233jaww9zq") // @moul
+	std.TestSetOrigCaller(admin)
 	test1 := std.Address("g1jg8mtutu9khhfwc4nxmuhcpftf0pajdhfvsqf5") // @test1
 	std.TestSetOrigCaller(test1)
 
