@@ -12,6 +12,9 @@ import (
 )
 
 func TestPostMeme(t *testing.T) {
+	test1 := std.Address("g1jg8mtutu9khhfwc4nxmuhcpftf0pajdhfvsqf5") // @test1
+	std.TestSetOrigCaller(test1)
+
 	m := NewMemeland()
 	id := m.PostMeme("Test meme data", time.Now().Unix())
 	if id == "" {
@@ -169,7 +172,8 @@ func TestGetPostsInRangeByUpvote(t *testing.T) {
 }
 
 func TestBadSortBy(t *testing.T) {
-
+	test1 := std.Address("g1jg8mtutu9khhfwc4nxmuhcpftf0pajdhfvsqf5")
+	std.TestSetOrigCaller(test1)
 	m := NewMemeland()
 	now := time.Now()
 
@@ -233,6 +237,8 @@ func TestNoPosts(t *testing.T) {
 }
 
 func TestUpvote(t *testing.T) {
+	test1 := std.Address("g1jg8mtutu9khhfwc4nxmuhcpftf0pajdhfvsqf5")
+	std.TestSetOrigCaller(test1)
 	m := NewMemeland()
 
 	// Add a post to Memeland
@@ -261,14 +267,14 @@ func TestUpvote(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	alice := testutils.TestAddress("alice")
+	alice := std.Address("g1jg8mtutu9khhfwc4nxmuhcpftf0pajdhfvsqf5") // @test1
 	std.TestSetOrigCaller(alice)
 
 	// Alice is admin
 	m := NewMemeland()
 
 	// Set caller to Bob
-	bob := testutils.TestAddress("bob")
+	bob := std.Address("g13ek2zz9qurzynzvssyc4sthwppnruhnp0gdz8n") // @r_demo
 	std.TestSetOrigCaller(bob)
 
 	// Bob adds post to Memeland
@@ -289,7 +295,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestDeleteByNonAdmin(t *testing.T) {
-	alice := testutils.TestAddress("alice")
+	alice := std.Address("g1jg8mtutu9khhfwc4nxmuhcpftf0pajdhfvsqf5") // @test1
 	std.TestSetOrigCaller(alice)
 
 	m := NewMemeland()
