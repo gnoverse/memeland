@@ -9,7 +9,7 @@ const Footer: FC<IFooterProps> = () => {
   const footerSocials: IFooterSocial[] = [
     {
       name: 'Discord',
-      link: 'https://discord.gg/YFtMjWwUN7',
+      link: 'https://discord.com/invite/gnoland',
       icon: <BsDiscord />
     },
     {
